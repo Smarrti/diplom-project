@@ -1,0 +1,21 @@
+* {
+    transition: 0.3s;
+}
+
+html {
+    margin: 0;
+    padding: 0;
+    font-family: 'Baloo Paaji 2', Verdana, Geneva, sans-serif;
+    font-size: 10px;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+body > * {
+    width: 100%;
+}

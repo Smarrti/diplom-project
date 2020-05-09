@@ -1,0 +1,25 @@
+.button {
+    font-family: 'Baloo Paaji 2', Verdana, Geneva, sans-serif;
+    font-size: 2.0rem;
+    border: none;
+    &__start {
+        width: 400px;
+        height: 50px;
+        border-radius: 20px;
+        background: linear-gradient(45deg, $color-button-first, $color-button-second);
+    }
+    &__repeat {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background:
+            url('../assets/img/repeat.svg') no-repeat 50%,
+            linear-gradient(45deg, #DC0055, #EE6B9E);
+        background-size: 30px, auto;
+    }
+}
+
+.line-before-button {
+    width: 100%;
+    border: 0;
+}

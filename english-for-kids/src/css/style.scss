@@ -1,0 +1,18 @@
+@import "./abstract/constants";
+@import "./abstract/mixins";
+@import "./abstract/placeholders";
+
+@import "./base/base";
+
+@import "./components/switcher";
+@import "./components/hamburger";
+@import "./components/cards";
+@import "./components/button";
+
+@import "./layouts/header";
+@import "./layouts/main";
+@import "./layouts/menu";
+@import "./layouts/stars";
+@import "./layouts/game";
+@import "./layouts/_control-panel";
+@import "./layouts/stats";

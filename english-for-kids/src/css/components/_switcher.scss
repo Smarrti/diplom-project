@@ -1,0 +1,43 @@
+.switcher {
+	display: flex;
+	align-items: center;
+	font-size: 2.0rem;
+	& > * {
+		padding: 0 10px;
+	}
+}
+
+.switch-input {
+	display: none;
+	&:checked + .switch {
+		background: $color-primary;
+	}
+	&:checked + .switch:after {
+		left: calc(100% - 5px);
+		transform: translateX(-100%);
+	}
+}
+
+.switch {
+	display: block;
+	position: relative;
+	width: 60px;
+	height: 30px;
+	cursor: pointer;
+	background: grey;
+	border-radius: 100px;
+	&::after {
+		content: '';
+		position: absolute;
+		top: 5px;
+		left: 5px;
+		width: 20px;
+		height: 20px;
+		background: $color-additional;
+		border-radius: 90px;
+		transition: 0.3s;
+	}
+	&:active:after {
+		width: 50px;
+	}
+}

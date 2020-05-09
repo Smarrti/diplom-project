@@ -1,0 +1,40 @@
+.hamburger {
+    transition: all 0.3s ease;
+    z-index: 1;
+    &_active {
+        position: fixed;
+        transform: rotate(90deg);
+    }
+}
+
+.hamburger-menu {
+    position: relative;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+}
+
+.hamburger-menu__line, 
+.hamburger-menu::after, 
+.hamburger-menu::before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    width: 100%;
+    height: 3px;
+    background-color: black;
+}
+
+.hamburger-menu::before {
+    top: 0;
+    left: 0;
+}
+
+.hamburger-menu::after {
+    bottom: 0;
+    left: 0;
+}
+
+.hamburger-menu__line {
+    top: calc(50% - 1.5px);
+}

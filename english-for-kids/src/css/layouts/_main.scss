@@ -1,0 +1,16 @@
+.main {
+	display: flex;
+	justify-content: center;
+	flex-wrap: wrap;
+
+	& > a {
+		color: $color-text;
+		text-decoration: none;
+	}
+
+	&__title {
+		width: 100%;
+		text-align: center;
+		font-size: 3rem;
+	}
+}

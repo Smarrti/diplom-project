@@ -1,0 +1,14 @@
+.control-panel {
+    display: flex;
+    justify-content: flex-end;
+    &__item {
+        display: flex;
+        align-items: center;
+        font-size: 2.0rem;
+        cursor: pointer;
+    }
+    &__image {
+        width: 40px;
+        margin-right: 5px;
+    }
+}
