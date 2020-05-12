@@ -1,8 +1,5 @@
 <?php
 
-$response;
-$code;
-
 if ($method != "POST" &&
   !isset($formData['login']) &&
   !isset($formData['password']) &&
@@ -13,13 +10,12 @@ if ($method != "POST" &&
   $response['Error'] = 'Not enough data';
   $code = 400;
 } else {
-  $db = new PDO(createPDOConfig(), DBUSER, DBPASS);
-  $sql = "INSERT INTO `users`(`surname_user`, `name_user`, `date_birth`, `date_registration`, `login`, `password`, `stats`) VALUES (?, ?, ?, ?, ?, ?, ?)";
-  $dbResponse = $db -> prepare($sql);
+  $sql = "INSERT INTO `users`(`surname_user`, `name_user`, `date_birth`, `date_registration`, `login`, `password`, `stats`, `status`) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+  $dbRequest = $db -> prepare($sql);
   
-  if ($dbResponse -> execute(array($formData['surname_user'], $formData['name_user'], 
+  if ($dbRequest -> execute(array($formData['surname_user'], $formData['name_user'], 
     $formData['date-birthday'], date("Y-m-d"), $formData['login'],
-    password_hash($formData['password'], PASSWORD_DEFAULT), ""))) {
+    password_hash($formData['password'], PASSWORD_DEFAULT), "", "User"))) {
     $response['Success'] = 'Client registered';
     $code = 200;
   } else {
@@ -27,6 +23,4 @@ if ($method != "POST" &&
     $code = 400;
   }
 }
-
-createResponse($response, $code);
 ?>
