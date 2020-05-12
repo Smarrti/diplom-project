@@ -4,6 +4,10 @@ ini_set('display_errors', 1);
 error_reporting(E_ALL);
 date_default_timezone_set('UTC');
 
+$response;
+$code;
+$db = new PDO(createPDOConfig(), DBUSER, DBPASS);
+
 function getFormData(){
   return json_decode(file_get_contents("php://input"), true);
 }
@@ -40,5 +44,9 @@ if (file_exists('routes/'.$url[1].'.php')){
   include_once 'routes/'.$url[1].'.php';
 } else {
   include_once 'routes/error.php';
+}
+
+if (isset($response) && isset($code)) {
+  createResponse($response, $code);
 }
 ?>
