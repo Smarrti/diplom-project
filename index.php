@@ -8,7 +8,32 @@ $response;
 $code;
 $db = new PDO(createPDOConfig(), DBUSER, DBPASS);
 
-function getFormData(){
+function checkToken($token, $userId) {
+  $sql = "SELECT `id_user`, `date_end` FROM `user_tokens` WHERE `token` = ?";
+  $db = new PDO(createPDOConfig(), DBUSER, DBPASS);
+  $dbRequest = $db -> prepare($sql);
+
+  if ($dbRequest -> execute(array($token))) {
+    $dbResponse = $dbRequest -> fetchAll(PDO::FETCH_ASSOC)[0];
+
+    if (date("Y-m-d") < date("Y-m-d", strtotime($dbResponse['date_end'])) &&
+      $userId == $dbResponse['id_user']
+    ) {
+      return 'Token valid';
+    } else {
+      return 'Token expired';
+    }
+  } else {
+    return 'Token not found';
+  }
+}
+
+function cathErrorForToken($errorType) {
+  $response['Error'] = $errorType;
+  createResponse($response, 403);
+}
+
+function getFormData() {
   return json_decode(file_get_contents("php://input"), true);
 }
 
