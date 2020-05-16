@@ -28,6 +28,25 @@ function checkToken($token, $userId) {
   }
 }
 
+function isAdministrator($userId) {
+  $sql = "SELECT `status` FROM `users` WHERE `id_user` = ?";
+  $db = new PDO(createPDOConfig(), DBUSER, DBPASS);
+  $dbRequest = $db -> prepare($sql);
+
+  if ($dbRequest -> execute(array($userId))) {
+    $status = $dbRequest -> fetchAll(PDO::FETCH_ASSOC)[0];
+    if ($status['status'] == 'Administrator') {
+      return true;
+    } else {
+      false;
+    }
+  } else {
+    $response['Error'] = 'Data base error';
+    $code = 400;
+    return false;
+  }
+}
+
 function cathErrorForToken($errorType) {
   $response['Error'] = $errorType;
   createResponse($response, 403);
