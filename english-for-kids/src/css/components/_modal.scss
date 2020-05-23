@@ -1,0 +1,21 @@
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba($color: #000000, $alpha: 0.8);
+  overflow: hidden;
+  &__card {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    width: 500px;
+    height: 300px;
+    top: calc(50% - 250px);
+    left: calc(50% - 150px);
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 0 10px black;
+  }
+}
