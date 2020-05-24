@@ -1,6 +1,7 @@
 import '../css/style.scss';
 import { cards as dictionary} from './Dictionary';
 import { placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
+import * as API from './RouteAPI';
 
 const categories = dictionary[0];
 const burgerButton = document.querySelector('.hamburger-menu');
@@ -10,6 +11,39 @@ const sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
 let difficultWords = [];
+
+async function sendRequest(url, method, data) {
+  let response;
+  await fetch(url, {
+    method: method,
+    headers: {
+      'Accept': 'application/json, text/plain, */*' ,
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then((res) => {
+    if (res.status !== 200) {
+      return Promise.reject(new Error(res.statusText));
+    }
+    return Promise.resolve(res)
+  })
+  .then((res) => res.json())
+  .then(json => {response = json})
+  .catch(() => {
+    console.log('Oops');
+  })
+  return response;
+}
+
+async function apiLoginInSystem(login, password) {
+  const url = API.detectURL('login');
+  const data = {
+    'login': login,
+    'password': password
+  }
+  const token = await sendRequest(url, 'POST', data);
+}
 
 function moveSidebar() {
   const hamburgerButton = document.querySelector('.hamburger');
@@ -398,14 +432,14 @@ function generateModal() {
   return modalCard;
 }
 
-function generateLabelForm(inputType, text) {
+function generateLabelForm(inputType, inputClass, text) {
   const label = document.createElement('label');
   const input = document.createElement('input');
 
   input.setAttribute('type', inputType);
   input.setAttribute('required', 'true');
   
-  input.classList.add('form__input');
+  input.classList.add('form__input', inputClass);
 
   label.append(input);
 
@@ -449,8 +483,8 @@ function generateLoginForm() {
   loginHeader.textContent = 'Авторизация на сайте';
   loginRegister.textContent = 'Нет аккаунта? Регистрация';
 
-  loginForm.append(generateLabelForm('text', 'Login'));
-  loginForm.append(generateLabelForm('password', 'Password'));
+  loginForm.append(generateLabelForm('text', 'form__login', 'Login'));
+  loginForm.append(generateLabelForm('password', 'form__password', 'Password'));
   loginForm.append(generateButtonForm('submit', 'Войти', 'button button__login'));
   loginWrapper.append(loginHeader, loginForm, loginRegister);
   modalCard.append(loginImage, loginWrapper);
@@ -563,6 +597,11 @@ document.querySelector('body').addEventListener('click', (event) => {
       localStorage.setItem('stats', '{}');
       deleteContent();
       generateStatsPage();
+      break;
+    case target.classList.contains('button__login'):
+      const login = document.querySelector('.form__login').value;
+      const password = document.querySelector('.form__password').value;
+      apiLoginInSystem(login, password);
       break;
     default:
       break;
