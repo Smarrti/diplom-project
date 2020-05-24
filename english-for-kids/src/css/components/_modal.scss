@@ -8,12 +8,11 @@
   overflow: hidden;
   &__card {
     display: flex;
-    flex-direction: column;
+    // flex-direction: column;
     position: fixed;
-    width: 500px;
-    height: 300px;
-    top: calc(50% - 250px);
-    left: calc(50% - 150px);
+    width: 550px;
+    top: calc(50% - 150px);
+    left: calc(50% - 275px);
     background: white;
     border-radius: 15px;
     box-shadow: 0 0 10px black;
