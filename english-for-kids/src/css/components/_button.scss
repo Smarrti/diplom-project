@@ -2,6 +2,7 @@
     font-family: 'Baloo Paaji 2', Verdana, Geneva, sans-serif;
     font-size: 2.0rem;
     border: none;
+    cursor: pointer;
     &__start {
         width: 400px;
         height: 50px;
@@ -16,6 +17,14 @@
             url('../assets/img/repeat.svg') no-repeat 50%,
             linear-gradient(45deg, #DC0055, #EE6B9E);
         background-size: 30px, auto;
+    }
+    &__login,
+    &__registration {
+        width: 150px;
+        font-size: 1.7rem;
+        background-color: $color-primary;
+        border: none;
+        border-radius: 5px;
     }
 }
 
