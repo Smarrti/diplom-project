@@ -6,6 +6,7 @@ const categories = dictionary[0];
 const burgerButton = document.querySelector('.hamburger-menu');
 const sidebarWrapper = document.querySelector('.sidebar-wrapper');
 const switcher = document.querySelector('.switch-input');
+const sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
 let difficultWords = [];
@@ -384,9 +385,85 @@ function generateStatsPage() {
   mainContent.append(createTableForStats(stats, statsContent));
 }
 
+function generateModal() {
+  const body = document.querySelector('body');
+  const modalWrapper = document.createElement('div');
+  const modalCard = document.createElement('div');
+
+  modalWrapper.classList.add('modal');
+  modalCard.classList.add('modal__card');
+
+  modalWrapper.append(modalCard);
+  body.append(modalWrapper);
+  return modalCard;
+}
+
+function generateLabelForm(inputType, text) {
+  const label = document.createElement('label');
+  const input = document.createElement('input');
+
+  input.setAttribute('type', inputType);
+  input.setAttribute('required', 'true');
+  
+  input.classList.add('form__input');
+
+  label.append(input);
+
+  if (text) {
+    const span = document.createElement('span');
+    span.classList.add('form__head');
+    span.textContent = text;
+    label.append(span);
+  }
+  return label;
+}
+
+function generateButtonForm(type, text, classes) {
+  const button = document.createElement('input');
+  button.classList = classes;
+  button.setAttribute('type', type);
+  button.setAttribute('value', text);
+  return button;
+}
+
+function generateLoginForm() {
+  const modalCard = generateModal();
+  const loginImage = document.createElement('object');
+  const loginWrapper = document.createElement('div');
+  const loginHeader = document.createElement('p');
+  const loginForm = document.createElement('p');
+  const loginRegister = document.createElement('a');
+  
+  loginImage.classList.add('auth__image');
+  loginWrapper.classList.add('auth__form-wrapper');
+  loginForm.classList.add('form');
+  loginRegister.classList.add('auth__switch');
+
+  loginImage.setAttribute('data', './assets/img/student-auth.svg');
+  loginImage.setAttribute('type', 'image/svg+xml');
+  loginForm.setAttribute('action', '#');
+  loginForm.setAttribute('method', 'GET');
+  loginRegister.setAttribute('href', '#');
+
+  loginImage.textContent = 'Your browser does not support SVG';
+  loginHeader.textContent = 'Авторизация на сайте';
+  loginRegister.textContent = 'Нет аккаунта? Регистрация';
+
+  loginForm.append(generateLabelForm('text', 'Login'));
+  loginForm.append(generateLabelForm('password', 'Password'));
+  loginForm.append(generateButtonForm('submit', 'Войти', 'button button__login'));
+  loginWrapper.append(loginHeader, loginForm, loginRegister);
+  modalCard.append(loginImage, loginWrapper);
+}
+
 deleteContent();
-generateStartContent();
-generateSidebar();
+
+if (sessionToken) {
+  generateStartContent();
+  generateSidebar();
+} else {
+  generateLoginForm();
+}
 
 document.querySelector('body').addEventListener('click', (event) => {
   const { target, path, } = event;
