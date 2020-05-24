@@ -390,7 +390,7 @@ generateSidebar();
 
 document.querySelector('body').addEventListener('click', (event) => {
   const { target, path, } = event;
-  if (!target.classList.contains('switch') && !target.classList.contains('switch-input')) {
+  if (!target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
     event.preventDefault();
   }
   const textEvent = target.textContent;
