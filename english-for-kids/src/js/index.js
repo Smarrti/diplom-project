@@ -507,6 +507,13 @@ function generateModal() {
   return modalCard;
 }
 
+function deleteModals() {
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach((e) => {
+    body.removeChild(e);
+  });
+}
+
 function generateLabelForm(inputType, inputClass, text) {
   const label = document.createElement('label');
   const input = document.createElement('input');
