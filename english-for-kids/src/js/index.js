@@ -36,6 +36,45 @@ async function sendRequest(url, method, data) {
   return response;
 }
 
+function createMessage(type, headMessage, textMessage) {
+  const body = document.querySelector('body');
+  const messageBody = document.createElement('div');
+  const messageImageWrapper = document.createElement('div');
+  const messageImage = document.createElement('img');
+  const messageWrapper = document.createElement('div');
+  const messageCloseWrapper = document.createElement('div');
+  const messageClose = document.createElement('img');
+  const messageHead = document.createElement('p');
+  const messageText = document.createElement('p');
+
+  messageBody.classList.add('message');
+  messageImageWrapper.classList.add('message__image-wrapper');
+  messageImage.classList.add('message__image');
+  messageWrapper.classList.add('message__wrapper');
+  messageCloseWrapper.classList.add('message__close-wrapper');
+  messageHead.classList.add('message__head');
+  messageText.classList.add('message__text');
+
+  messageClose.setAttribute('src', './assets/img/close.png');
+
+  messageHead.textContent = headMessage;
+  messageText.textContent = textMessage;
+
+  if (type === 'warning') {
+    messageImageWrapper.classList.add('message__image-wrapper_warning');
+    messageImage.setAttribute('src', './assets/img/notify.png');
+  } else {
+    messageImageWrapper.classList.add('message__image-wrapper_error');
+    messageImage.setAttribute('src', './assets/img/error.png');
+  }
+
+  messageImageWrapper.append(messageImage);
+  messageCloseWrapper.append(messageClose);
+  messageWrapper.append(messageCloseWrapper, messageHead, messageText);
+  messageBody.append(messageImageWrapper, messageWrapper);
+  body.append(messageBody);
+}
+
 async function apiLoginInSystem(login, password) {
   const url = API.detectURL('login');
   const data = {
