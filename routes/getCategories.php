@@ -6,7 +6,7 @@ if ($method != "GET") {
 } else {
   $sql = "SELECT `id_category`, `name_category`, `picture_category` FROM `category-words`";
   $dbRequest = $db -> prepare($sql);
-  if ($dbRequest -> execute(array($formData['userId']))) {
+  if ($dbRequest -> execute()) {
     $response = $dbRequest -> fetchAll(PDO::FETCH_ASSOC);
     $code = 200;
   } else {
