@@ -92,8 +92,10 @@ function resolveApiErrors(type) {
       break;
     case 'Not enough data':
       createMessage('warning', 'Not all data is filled', 'Please change request, and retry again');
+      break;
     case 'Account not found':
       createMessage('warning', 'Error', 'Login or password are wrong');
+      break;
     default:
       validError = false;
       break;
@@ -118,6 +120,7 @@ async function apiLoginInSystem(login, password) {
     sessionToken = token['token'];
     generateStartContent();
     generateSidebar();
+    deleteModals();
   }
 }
 
