@@ -5,7 +5,8 @@ export function detectURL(requestTo) {
     case 'login':
       prepareURL += 'login';
       break;
-  
+    case 'categories':
+      prepareURL += 'getCategories';
     default:
       break;
   }

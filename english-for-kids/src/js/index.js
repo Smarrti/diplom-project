@@ -3,7 +3,7 @@ import { cards as dictionary} from './Dictionary';
 import { placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
 import * as API from './RouteAPI';
 
-const categories = dictionary[0];
+// const categories = dictionary[0];
 const burgerButton = document.querySelector('.hamburger-menu');
 const sidebarWrapper = document.querySelector('.sidebar-wrapper');
 const switcher = document.querySelector('.switch-input');
@@ -18,7 +18,7 @@ async function sendRequest(url, method, data) {
   await fetch(url, {
     method: method,
     headers: {
-      'Accept': 'application/json, text/plain, */*' ,
+      'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify(data)
@@ -123,6 +123,11 @@ async function apiLoginInSystem(login, password) {
   }
 }
 
+async function getCategories() {
+  const url = API.detectURL('categories');
+  return await sendRequest(url, 'GET');
+}
+
 function moveSidebar() {
   const hamburgerButton = document.querySelector('.hamburger');
   const sidebar = document.querySelector('.sidebar');
@@ -143,25 +148,27 @@ sidebarWrapper.addEventListener('click', () => {
   }
 });
 
-function generateStartContent() {
+async function generateStartContent() {
   const mainContent = document.querySelector('.main');
+  const categories = await getCategories();
+
   categories.forEach((category, index) => {
     const card = document.createElement('a');
     const cardWrapper = document.createElement('div');
     const cardImage = document.createElement('img');
     const cardText = document.createElement('p');
 
-    card.dataset.category = category;
+    card.dataset.category = category['name_category'];
 
     card.setAttribute('href', '#');
-    cardImage.setAttribute('src', dictionary[index + 1][0].image);
+    cardImage.setAttribute('src', category['picture_category']);
 
     card.classList.add('category-card', 'card', 'category');
     cardWrapper.classList.add('category-card__wrapper', 'category');
     cardImage.classList.add('category-card__image', 'category');
     cardText.classList.add('card__text', 'category');
 
-    cardText.textContent  = category;
+    cardText.textContent = category['name_category'];
 
     cardWrapper.append(cardImage);
     card.append(cardWrapper);
@@ -178,12 +185,13 @@ function createSidebarElement(tag, href, className, nameLink) {
   return link;
 }
 
-function generateSidebar() {
+async function generateSidebar() {
+  const categories = await getCategories();
   const sidebar = document.querySelector('.sidebar');
   sidebar.append(createSidebarElement('a', '#', 'sidebar__link sidebar__link_active', 'Main Page'));
   sidebar.append(createSidebarElement('a', '#', 'sidebar__link', 'Stats'));
   categories.forEach((category) => {
-    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category));
+    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category['name_category']));
   });
 }
 
