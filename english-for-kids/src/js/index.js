@@ -7,6 +7,7 @@ const categories = dictionary[0];
 const burgerButton = document.querySelector('.hamburger-menu');
 const sidebarWrapper = document.querySelector('.sidebar-wrapper');
 const switcher = document.querySelector('.switch-input');
+const body = document.querySelector('body');
 const sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
@@ -37,7 +38,6 @@ async function sendRequest(url, method, data) {
 }
 
 function createMessage(type, headMessage, textMessage) {
-  const body = document.querySelector('body');
   const messageBody = document.createElement('div');
   const messageImageWrapper = document.createElement('div');
   const messageImage = document.createElement('img');
@@ -77,7 +77,6 @@ function createMessage(type, headMessage, textMessage) {
 }
 
 function deleteMessages() {
-  const body = document.querySelector('body');
   const messages = document.querySelectorAll('.message');
   messages.forEach((e) => {
     body.removeChild(e);
@@ -492,7 +491,6 @@ function generateStatsPage() {
 }
 
 function generateModal() {
-  const body = document.querySelector('body');
   const modalWrapper = document.createElement('div');
   const modalCard = document.createElement('div');
 
@@ -571,7 +569,7 @@ if (sessionToken) {
   generateLoginForm();
 }
 
-document.querySelector('body').addEventListener('click', (event) => {
+body.addEventListener('click', (event) => {
   const { target, path, } = event;
   if (!target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
     event.preventDefault();
@@ -683,7 +681,7 @@ document.querySelector('body').addEventListener('click', (event) => {
   }
 });
 
-document.querySelector('body').addEventListener('mouseout', (event) => {
+body.addEventListener('mouseout', (event) => {
   const { target, toElement } = event;
   if (toElement) {
     const cardId = target.classList[0];
