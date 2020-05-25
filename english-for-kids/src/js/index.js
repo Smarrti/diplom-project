@@ -31,7 +31,7 @@ async function sendRequest(url, method, data) {
   .then((res) => res.json())
   .then(json => {response = json})
   .catch(() => {
-    console.log('Oops');
+    resolveApiErrors('Request error')
   })
   return response;
 }
@@ -73,6 +73,16 @@ function createMessage(type, headMessage, textMessage) {
   messageWrapper.append(messageCloseWrapper, messageHead, messageText);
   messageBody.append(messageImageWrapper, messageWrapper);
   body.append(messageBody);
+}
+
+function resolveApiErrors(type) {
+  switch (type) {
+    case 'Request error':
+      createMessage('error', 'Not connection', 'Not connection to server');
+      break;
+    default:
+      break;
+  }
 }
 
 async function apiLoginInSystem(login, password) {
