@@ -8,7 +8,7 @@ const burgerButton = document.querySelector('.hamburger-menu');
 const sidebarWrapper = document.querySelector('.sidebar-wrapper');
 const switcher = document.querySelector('.switch-input');
 const body = document.querySelector('body');
-const sessionToken = sessionStorage.getItem('sessionToken');
+let sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
 let difficultWords = [];
@@ -112,7 +112,12 @@ async function apiLoginInSystem(login, password) {
   }
   const token = await sendRequest(url, 'POST', data);
   if (!resolveApiErrors(token['Error'])) {
-    
+    sessionStorage.setItem('sessionToken', token['token']);
+    sessionStorage.setItem('userId', token['userId']);
+    sessionStorage.setItem('status', token['status']);
+    sessionToken = token['token'];
+    generateStartContent();
+    generateSidebar();
   }
 }
 
