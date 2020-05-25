@@ -30,12 +30,14 @@
   }
   &__wrapper {
     padding: 0 10px;
+    overflow: hidden;
   }
   &__head {
     font-size: 1.8rem;
   }
   &__text {
     font-size: 1.6rem;
+    line-height: 19px;
   }
   & p {
     margin-block-start: 0;
