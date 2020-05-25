@@ -31,7 +31,7 @@ async function sendRequest(url, method, data) {
   .then((res) => res.json())
   .then(json => {response = json})
   .catch(() => {
-    resolveApiErrors('Request error')
+    resolveApiErrors('Request error');
   })
   return response;
 }
@@ -76,13 +76,24 @@ function createMessage(type, headMessage, textMessage) {
 }
 
 function resolveApiErrors(type) {
+  let validError = true;
   switch (type) {
     case 'Request error':
+    case 'Data base error':
       createMessage('error', 'Not connection', 'Not connection to server');
       break;
+    case 'Not enough data':
+      createMessage('warning', 'Not all data is filled', 'Please change request, and retry again');
+    case 'Account not found':
+      createMessage('warning', 'Error', 'Login or password are wrong');
     default:
+      validError = false;
       break;
   }
+  if (validError) {
+    return true;
+  }
+  return false;
 }
 
 async function apiLoginInSystem(login, password) {
@@ -92,6 +103,9 @@ async function apiLoginInSystem(login, password) {
     'password': password
   }
   const token = await sendRequest(url, 'POST', data);
+  if (!resolveApiErrors(token['Error'])) {
+    
+  }
 }
 
 function moveSidebar() {
