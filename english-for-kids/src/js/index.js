@@ -34,6 +34,10 @@ async function sendRequest(url, method, data) {
   .catch(() => {
     resolveApiErrors('Request error');
   })
+  if (response['Error']) {
+    resolveApiErrors(response['Error']);
+    return 'Error'
+  }
   return response;
 }
 
@@ -84,7 +88,6 @@ function deleteMessages() {
 }
 
 function resolveApiErrors(type) {
-  let validError = true;
   switch (type) {
     case 'Request error':
     case 'Data base error':
@@ -100,10 +103,6 @@ function resolveApiErrors(type) {
       validError = false;
       break;
   }
-  if (validError) {
-    return true;
-  }
-  return false;
 }
 
 async function apiLoginInSystem(login, password) {
@@ -113,7 +112,7 @@ async function apiLoginInSystem(login, password) {
     'password': password
   }
   const token = await sendRequest(url, 'POST', data);
-  if (!resolveApiErrors(token['Error'])) {
+  if (token !== 'Error') {
     sessionStorage.setItem('sessionToken', token['token']);
     sessionStorage.setItem('userId', token['userId']);
     sessionStorage.setItem('status', token['status']);
