@@ -52,6 +52,7 @@ function createMessage(type, headMessage, textMessage) {
   messageImage.classList.add('message__image');
   messageWrapper.classList.add('message__wrapper');
   messageCloseWrapper.classList.add('message__close-wrapper');
+  messageClose.classList.add('message__close');
   messageHead.classList.add('message__head');
   messageText.classList.add('message__text');
 
@@ -73,6 +74,14 @@ function createMessage(type, headMessage, textMessage) {
   messageWrapper.append(messageCloseWrapper, messageHead, messageText);
   messageBody.append(messageImageWrapper, messageWrapper);
   body.append(messageBody);
+}
+
+function deleteMessages() {
+  const body = document.querySelector('body');
+  const messages = document.querySelectorAll('.message');
+  messages.forEach((e) => {
+    body.removeChild(e);
+  })
 }
 
 function resolveApiErrors(type) {
@@ -665,6 +674,9 @@ document.querySelector('body').addEventListener('click', (event) => {
       const login = document.querySelector('.form__login').value;
       const password = document.querySelector('.form__password').value;
       apiLoginInSystem(login, password);
+      break;
+    case target.classList.contains('message__close'):
+      deleteMessages();
       break;
     default:
       break;
