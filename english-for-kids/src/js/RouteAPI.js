@@ -20,6 +20,8 @@ export function detectURL(requestTo) {
     case 'getStats':
       prepareURL += 'getStats';
       break;
+    case 'setStats':
+      prepareURL += 'setStats';
     default:
       break;
   }

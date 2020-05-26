@@ -121,6 +121,16 @@ async function getStats(token, userId) {
   return response['stats'];
 }
 
+async function sendStats() {
+  const url = API.detectURL('setStats');
+  const data = {
+    token: sessionStorage.getItem('sessionToken'),
+    userId: sessionStorage.getItem('userId'),
+    stats: localStorage.getItem('stats')
+  }
+  await sendRequest(url, 'POST', data);
+}
+
 async function apiLoginInSystem(login, password) {
   const url = API.detectURL('login');
   const data = {
@@ -397,7 +407,7 @@ function locationToMainPage() {
   document.location.href = placeMainHtmlFile;
 }
 
-function gameEnd(numberErrors) {
+async function gameEnd(numberErrors) {
   deleteContent();
 
   const mainContent = document.querySelector('.main');
@@ -424,7 +434,9 @@ function gameEnd(numberErrors) {
   mainContent.append(gameEndWrapper);
 
   wordTurn = [];
-  setTimeout(locationToMainPage, timeMessageOnGameEnd);
+  // setTimeout(locationToMainPage, timeMessageOnGameEnd);
+
+  await sendStats();
 }
 
 function calcStats(type, card) {
