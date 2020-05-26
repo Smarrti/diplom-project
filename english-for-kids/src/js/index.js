@@ -64,11 +64,25 @@ function createMessage(type, headMessage, textMessage) {
   messageText.textContent = textMessage;
 
   if (type === 'warning') {
-    messageImageWrapper.classList.add('message__image-wrapper_warning');
-    messageImage.setAttribute('src', './assets/img/notify.png');
+    
   } else {
     messageImageWrapper.classList.add('message__image-wrapper_error');
     messageImage.setAttribute('src', './assets/img/error.png');
+  }
+  switch (type) {
+    case 'warning':
+      messageImageWrapper.classList.add('message__image-wrapper_warning');
+      messageImage.setAttribute('src', './assets/img/notify.png');
+      break;
+    case 'error':
+      messageImageWrapper.classList.add('message__image-wrapper_error');
+      messageImage.setAttribute('src', './assets/img/error.png');
+      break;
+    case 'complete':
+      messageImageWrapper.classList.add('message__image-wrapper_complete');
+      messageImage.setAttribute('src', './assets/img/complete.png')
+    default:
+      break;
   }
 
   messageImageWrapper.append(messageImage);
@@ -134,6 +148,7 @@ async function apiRegisterInSystem(surname, name, birthday, login, password) {
   if (response['Success'] === 'Client registered') {
     await apiLoginInSystem(login, password);
   }
+  createMessage('')
 }
 
 async function getCategories() {

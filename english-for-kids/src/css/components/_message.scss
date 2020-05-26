@@ -20,6 +20,9 @@
     &_warning {
       background-color: $color-alert-warning;
     }
+    &_complete {
+      background-color: $color-primary;
+    }
   }
   &__close-wrapper {
     display: flex;
