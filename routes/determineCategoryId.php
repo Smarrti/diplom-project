@@ -1,6 +1,6 @@
 <?php
 
-if ($method != "GET" &&
+if ($method != "POST" &&
   isset($formData['categoryName'])
 ) {
   $response['Error'] = 'Not enough data';
