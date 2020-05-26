@@ -1,5 +1,5 @@
 import '../css/style.scss';
-import { cards as dictionary} from './Dictionary';
+// import { cards as dictionary} from './Dictionary';
 import { placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
 import * as API from './RouteAPI';
 
@@ -127,6 +127,14 @@ async function getCategories() {
   return await sendRequest(url, 'GET');
 }
 
+async function getWords(categoryId) {
+  const url = API.detectURL('words');
+  const data = {
+    categoryId: categoryId
+  }
+  return await sendRequest(url, 'POST', data);
+}
+
 function moveSidebar() {
   const hamburgerButton = document.querySelector('.hamburger');
   const sidebar = document.querySelector('.sidebar');
@@ -227,14 +235,9 @@ async function generateTrainMode(categoryId, playMode) {
       words.push(difficultWords[i][1]);
     }
   } else {
-    const url = API.detectURL('words');
-    const data = {
-      categoryId: categoryId
-    }
-    const response = await sendRequest(url, 'POST', data);
+    const response = await getWords(categoryId);
     title.textContent = response['name_category'];
     words = response['words'];
-    console.log('1');
   }
 
   words.forEach((wordObject, index) => {
@@ -664,18 +667,20 @@ body.addEventListener('click', async (event) => {
       }
       let words = [];
       if (openCategoryId !== 'trainDifficultWordsMode') {
-        words = dictionary[openCategoryId];
+        words = await getWords(openCategoryId);
+        words = words['words'];
       } else {
         words = difficultWords;
       }
+        console.log(words);
       for (let j = 0; j < words.length; j += 1) {
         const wordObject = words[j];
         if (wordObject.translation === cardText) {
-          playSound(wordObject.audioSrc);
+          playSound(wordObject["audio_source"]);
           break;
         } else if (wordObject[1]) {
           if (wordObject[1].translation === cardText) {
-            playSound(wordObject[1].audioSrc);
+            playSound(wordObject[1]["audio_source"]);
             break;
           }
         }
@@ -692,7 +697,7 @@ body.addEventListener('click', async (event) => {
       }
       break;
     case target.classList.contains('button__start'):
-      startGame(categories.indexOf(document.querySelector('.main__title').textContent));
+      startGame(openCategoryId);
       break;
     case target.classList.contains('button__repeat'):
       soundWord(wordTurn, document.querySelectorAll('.star_win').length);
