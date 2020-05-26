@@ -731,6 +731,15 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('message__close'):
       deleteMessages();
       break;
+    case target.classList.contains('auth__switch'):
+      const textContentOfSwitcher = target.textContent;
+      deleteModals();
+      if (textContentOfSwitcher === 'Нет аккаунта? Регистрация') {
+        generateAuthorizationForm('register');
+      } else {
+        generateAuthorizationForm('login');
+      }
+      break;
     default:
       break;
   }
