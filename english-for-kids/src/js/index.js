@@ -569,34 +569,48 @@ function generateButtonForm(type, text, classes) {
   return button;
 }
 
-function generateLoginForm() {
+function generateAuthorizationForm(type) {
   const modalCard = generateModal();
-  const loginImage = document.createElement('object');
-  const loginWrapper = document.createElement('div');
-  const loginHeader = document.createElement('p');
-  const loginForm = document.createElement('p');
-  const loginRegister = document.createElement('a');
+  const formImage = document.createElement('object');
+  const formWrapper = document.createElement('div');
+  const formHeader = document.createElement('p');
+  const formForm = document.createElement('form');
+  const formSwitcher = document.createElement('a');
   
-  loginImage.classList.add('auth__image');
-  loginWrapper.classList.add('auth__form-wrapper');
-  loginForm.classList.add('form');
-  loginRegister.classList.add('auth__switch');
+  formImage.classList.add('auth__image');
+  formWrapper.classList.add('auth__form-wrapper');
+  formForm.classList.add('form');
+  formSwitcher.classList.add('auth__switch');
 
-  loginImage.setAttribute('data', './assets/img/student-auth.svg');
-  loginImage.setAttribute('type', 'image/svg+xml');
-  loginForm.setAttribute('action', '#');
-  loginForm.setAttribute('method', 'GET');
-  loginRegister.setAttribute('href', '#');
+  formImage.setAttribute('type', 'image/svg+xml');
+  formForm.setAttribute('action', '#');
+  formForm.setAttribute('method', 'GET');
+  formSwitcher.setAttribute('href', '#');
 
-  loginImage.textContent = 'Your browser does not support SVG';
-  loginHeader.textContent = 'Авторизация на сайте';
-  loginRegister.textContent = 'Нет аккаунта? Регистрация';
+  formImage.textContent = 'Your browser does not support SVG';
 
-  loginForm.append(generateLabelForm('text', 'form__login', 'Login'));
-  loginForm.append(generateLabelForm('password', 'form__password', 'Password'));
-  loginForm.append(generateButtonForm('submit', 'Войти', 'button button__login'));
-  loginWrapper.append(loginHeader, loginForm, loginRegister);
-  modalCard.append(loginImage, loginWrapper);
+  if (type === 'login') {
+    formImage.setAttribute('data', './assets/img/student-auth.svg');
+    formHeader.textContent = 'Авторизация на сайте';
+    formForm.append(generateLabelForm('text', 'form__login', 'Login'));
+    formForm.append(generateLabelForm('password', 'form__password', 'Password'));
+    formForm.append(generateButtonForm('submit', 'Войти', 'button button__login'));
+    formSwitcher.textContent = 'Нет аккаунта? Регистрация';
+  } else {
+    formImage.setAttribute('data', './assets/img/student-reg.svg');
+    formHeader.textContent = 'Регистрация на сайте';
+    formForm.append(generateLabelForm('text', 'form__surname', 'Фамилия'));
+    formForm.append(generateLabelForm('text', 'form__name', 'Имя'));
+    formForm.append(generateLabelForm('date', 'form__birthday', '.'));
+    formForm.append(generateLabelForm('text', 'form__login', 'Логин'));
+    formForm.append(generateLabelForm('password', 'form__password', 'Пароль'));
+    formForm.append(generateLabelForm('password', 'form__password', 'Повторите пароль'));
+    formForm.append(generateButtonForm('submit', 'Войти', 'button button__login'));
+    formSwitcher.textContent = 'Есть аккаунт? Авторизация';
+  }
+
+  formWrapper.append(formHeader, formForm, formSwitcher);
+  modalCard.append(formImage, formWrapper);
 }
 
 deleteContent();
@@ -605,7 +619,7 @@ if (sessionToken) {
   generateStartContent();
   generateSidebar();
 } else {
-  generateLoginForm();
+  generateAuthorizationForm('login');
 }
 
 body.addEventListener('click', async (event) => {
