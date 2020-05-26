@@ -121,6 +121,21 @@ async function apiLoginInSystem(login, password) {
   }
 }
 
+async function apiRegisterInSystem(surname, name, birthday, login, password) {
+  const data = {
+    surname_user: surname,
+    name_user: name,
+    date_birthday: birthday,
+    login: login,
+    password: password
+  }
+  const url = API.detectURL('registration')
+  const response = await sendRequest(url, 'POST', data);
+  if (response['Success'] === 'Client registered') {
+    await apiLoginInSystem(login, password);
+  }
+}
+
 async function getCategories() {
   const url = API.detectURL('categories');
   return await sendRequest(url, 'GET');
@@ -605,7 +620,7 @@ function generateAuthorizationForm(type) {
     formForm.append(generateLabelForm('text', 'form__login', 'Логин'));
     formForm.append(generateLabelForm('password', 'form__password', 'Пароль'));
     formForm.append(generateLabelForm('password', 'form__password', 'Повторите пароль'));
-    formForm.append(generateButtonForm('submit', 'Войти', 'button button__login'));
+    formForm.append(generateButtonForm('submit', 'Регистрация', 'button button__reg'));
     formSwitcher.textContent = 'Есть аккаунт? Авторизация';
   }
 
@@ -624,7 +639,7 @@ if (sessionToken) {
 
 body.addEventListener('click', async (event) => {
   const { target, path, } = event;
-  if (!target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
+  if ((target.classList.contains('button__reg') && document.querySelector('.form').checkValidity()) && !target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
     event.preventDefault();
   }
   const textEvent = target.textContent;
@@ -728,6 +743,19 @@ body.addEventListener('click', async (event) => {
       const password = document.querySelector('.form__password').value;
       apiLoginInSystem(login, password);
       break;
+    case target.classList.contains('button__reg'): {
+      const surname = document.querySelector('.form__surname').value;
+      const name = document.querySelector('.form__name').value;
+      const birthday = document.querySelector('.form__birthday').value;
+      const loginUser = document.querySelector('.form__login').value;
+      const passwordUser = document.querySelectorAll('.form__password');
+      if (passwordUser[0].value === passwordUser[1].value) {
+        apiRegisterInSystem(surname, name, birthday, loginUser, passwordUser[0].value);
+      } else {
+        createMessage('warning', 'Ошибка данных', 'Пароли не совпадают');
+      }
+      break;
+    }
     case target.classList.contains('message__close'):
       deleteMessages();
       break;

@@ -14,6 +14,9 @@ export function detectURL(requestTo) {
     case 'words':
       prepareURL += 'getWords';
       break;
+    case 'registration':
+      prepareURL += 'signup';
+      break;
     default:
       break;
   }
