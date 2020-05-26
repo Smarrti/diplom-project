@@ -11,6 +11,9 @@ export function detectURL(requestTo) {
     case 'determineCategoryId':
       prepareURL += 'determineCategoryId';
       break;
+    case 'words':
+      prepareURL += 'getWords';
+      break;
     default:
       break;
   }

@@ -203,14 +203,14 @@ async function determineCategoryId(categoryName) {
   return response["categoryId"];
 }
 
-function generateTrainMode(categoryId, playMode) {
+async function generateTrainMode(categoryId, playMode) {
   const mainContent = document.querySelector('.main');
 
   openCategoryId = categoryId;
 
   const title = document.createElement('div');
   title.classList.add('main__title');
-  title.textContent = categories[categoryId - 1];
+  title.textContent = 'Train words';
   mainContent.append(title);
 
   if (playMode) {
@@ -227,7 +227,14 @@ function generateTrainMode(categoryId, playMode) {
       words.push(difficultWords[i][1]);
     }
   } else {
-    words = dictionary[categoryId];
+    const url = API.detectURL('words');
+    const data = {
+      categoryId: categoryId
+    }
+    const response = await sendRequest(url, 'POST', data);
+    title.textContent = response['name_category'];
+    words = response['words'];
+    console.log('1');
   }
 
   words.forEach((wordObject, index) => {
