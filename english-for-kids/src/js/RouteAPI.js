@@ -7,6 +7,10 @@ export function detectURL(requestTo) {
       break;
     case 'categories':
       prepareURL += 'getCategories';
+      break;
+    case 'determineCategoryId':
+      prepareURL += 'determineCategoryId';
+      break;
     default:
       break;
   }

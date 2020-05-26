@@ -3,7 +3,6 @@ import { cards as dictionary} from './Dictionary';
 import { placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
 import * as API from './RouteAPI';
 
-// const categories = dictionary[0];
 const burgerButton = document.querySelector('.hamburger-menu');
 const sidebarWrapper = document.querySelector('.sidebar-wrapper');
 const switcher = document.querySelector('.switch-input');
@@ -193,6 +192,15 @@ async function generateSidebar() {
   categories.forEach((category) => {
     sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category['name_category']));
   });
+}
+
+async function determineCategoryId(categoryName) {
+  const url = API.detectURL('determineCategoryId');
+  const data = {
+    categoryName: categoryName
+  }
+  const response = await sendRequest(url, 'POST', data);
+  return response["categoryId"];
 }
 
 function generateTrainMode(categoryId, playMode) {
@@ -591,7 +599,7 @@ if (sessionToken) {
   generateLoginForm();
 }
 
-body.addEventListener('click', (event) => {
+body.addEventListener('click', async (event) => {
   const { target, path, } = event;
   if (!target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
     event.preventDefault();
@@ -617,8 +625,9 @@ body.addEventListener('click', (event) => {
       for (let i = 0; i < path.length - 2; i += 1) {
         const tag = path[i];
         if (tag.classList.contains('category-card')) {
+          const categoryId = await determineCategoryId(tag.dataset.category);
           deleteContent();
-          generateTrainMode(categories.indexOf(tag.dataset.category) + 1, switcher.checked);
+          generateTrainMode(categoryId, switcher.checked);
           changeSidebarLinkActive(tag.dataset.category);
           break;
         }	
