@@ -262,7 +262,6 @@ async function generateTrainMode(categoryId, playMode) {
     cardWrapper.append(cardImage);
     if (playMode) {
       card.append(cardWrapper);
-      card.classList.add('word-card_play');
       cardImage.classList.add('card_play');
       cardImage.dataset.word = wordObject.word;
     } else {
@@ -329,12 +328,13 @@ function playSound(src) {
 }
 
 function soundWord(turn, index) {
-  playSound(turn[index].audioSrc);
+  playSound(turn[index]['audio_source']);
 }
 
-function startGame(categoryId) {
+async function startGame(categoryId) {
   const turn = [];
-  const categoryWords = dictionary[categoryId + 1];
+  let categoryWords = await getWords(openCategoryId);
+  categoryWords = categoryWords['words'];
   const categoryWordsLength = categoryWords.length;
   for (let i = 0; i < categoryWordsLength; i += 1) {
     let number = generateRandomNumber(categoryWordsLength, 0);
@@ -420,7 +420,7 @@ function checkOnClickedCard(word, card) {
     } else {
       playSound(correctSound);
       setTimeout(() => {
-        playSound(wordTurn[numberQuestion + 1].audioSrc);
+        playSound(wordTurn[numberQuestion + 1]["audio_source"]);
       }, timeOfSuccessSoundAndVoice);
       makeCardNonActive(card);
     }
@@ -671,7 +671,6 @@ body.addEventListener('click', async (event) => {
       } else {
         words = difficultWords;
       }
-        console.log(words);
       for (let j = 0; j < words.length; j += 1) {
         const wordObject = words[j];
         if (wordObject.translation === cardText) {
