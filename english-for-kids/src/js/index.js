@@ -435,6 +435,7 @@ async function gameEnd(numberErrors) {
 
   wordTurn = [];
 
+  setTimeout(locationToMainPage, timeMessageOnGameEnd);
   await sendStats();
 }
 
