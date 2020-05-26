@@ -63,12 +63,6 @@ function createMessage(type, headMessage, textMessage) {
   messageHead.textContent = headMessage;
   messageText.textContent = textMessage;
 
-  if (type === 'warning') {
-    
-  } else {
-    messageImageWrapper.classList.add('message__image-wrapper_error');
-    messageImage.setAttribute('src', './assets/img/error.png');
-  }
   switch (type) {
     case 'warning':
       messageImageWrapper.classList.add('message__image-wrapper_warning');
@@ -148,7 +142,7 @@ async function apiRegisterInSystem(surname, name, birthday, login, password) {
   if (response['Success'] === 'Client registered') {
     await apiLoginInSystem(login, password);
   }
-  createMessage('')
+  createMessage('complete', 'Успешно', 'Вы зарегистрированы в системе')
 }
 
 async function getCategories() {
@@ -764,8 +758,11 @@ body.addEventListener('click', async (event) => {
       const birthday = document.querySelector('.form__birthday').value;
       const loginUser = document.querySelector('.form__login').value;
       const passwordUser = document.querySelectorAll('.form__password');
+      const form = document.querySelector('.form');
       if (passwordUser[0].value === passwordUser[1].value) {
-        apiRegisterInSystem(surname, name, birthday, loginUser, passwordUser[0].value);
+        if (form.checkValidity()) {
+          apiRegisterInSystem(surname, name, birthday, loginUser, passwordUser[0].value);
+        }
       } else {
         createMessage('warning', 'Ошибка данных', 'Пароли не совпадают');
       }
