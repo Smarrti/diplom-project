@@ -17,6 +17,9 @@ export function detectURL(requestTo) {
     case 'registration':
       prepareURL += 'signup';
       break;
+    case 'getStats':
+      prepareURL += 'getStats';
+      break;
     default:
       break;
   }

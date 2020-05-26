@@ -111,6 +111,16 @@ function resolveApiErrors(type) {
   }
 }
 
+async function getStats(token, userId) {
+  const url = API.detectURL('getStats');
+  const data = {
+    token: token,
+    userId: userId
+  }
+  const response = await sendRequest(url, 'POST', data);
+  return response['stats'];
+}
+
 async function apiLoginInSystem(login, password) {
   const url = API.detectURL('login');
   const data = {
@@ -126,6 +136,7 @@ async function apiLoginInSystem(login, password) {
     generateStartContent();
     generateSidebar();
     deleteModals();
+    localStorage.setItem('stats', await getStats(token['token'], token['userId']));
   }
 }
 
