@@ -14,7 +14,7 @@ let difficultWords = [];
 async function sendRequest(url, method, data) {
   let response;
   await fetch(url, {
-    method: method,
+    method,
     headers: {
       'Accept': 'application/json, text/plain, */*',
       'Content-Type': 'application/json'
@@ -32,8 +32,8 @@ async function sendRequest(url, method, data) {
   .catch(() => {
     resolveApiErrors('Request error');
   })
-  if (response['Error']) {
-    resolveApiErrors(response['Error']);
+  if (response.Error) {
+    resolveApiErrors(response.Error);
     return 'Error'
   }
   return response;
@@ -114,11 +114,11 @@ function resolveApiErrors(type) {
 async function getStats(token, userId) {
   const url = API.detectURL('getStats');
   const data = {
-    token: token,
-    userId: userId
+    token,
+    userId
   }
   const response = await sendRequest(url, 'POST', data);
-  return response['stats'];
+  return response.stats;
 }
 
 async function sendStats() {
@@ -139,14 +139,14 @@ async function apiLoginInSystem(login, password) {
   }
   const token = await sendRequest(url, 'POST', data);
   if (token !== 'Error') {
-    sessionStorage.setItem('sessionToken', token['token']);
-    sessionStorage.setItem('userId', token['userId']);
-    sessionStorage.setItem('status', token['status']);
-    sessionToken = token['token'];
+    sessionStorage.setItem('sessionToken', token.token);
+    sessionStorage.setItem('userId', token.userId);
+    sessionStorage.setItem('status', token.status);
+    sessionToken = token.token;
     generateStartContent();
     generateSidebar();
     deleteModals();
-    localStorage.setItem('stats', await getStats(token['token'], token['userId']));
+    localStorage.setItem('stats', await getStats(token.token, token.userId));
   }
 }
 
@@ -155,12 +155,12 @@ async function apiRegisterInSystem(surname, name, birthday, login, password) {
     surname_user: surname,
     name_user: name,
     date_birthday: birthday,
-    login: login,
-    password: password
+    login,
+    password
   }
   const url = API.detectURL('registration')
   const response = await sendRequest(url, 'POST', data);
-  if (response['Success'] === 'Client registered') {
+  if (response.Success === 'Client registered') {
     await apiLoginInSystem(login, password);
   }
   createMessage('complete', 'Успешно', 'Вы зарегистрированы в системе')
@@ -174,7 +174,7 @@ async function getCategories() {
 async function getWords(categoryId) {
   const url = API.detectURL('words');
   const data = {
-    categoryId: categoryId
+    categoryId
   }
   return await sendRequest(url, 'POST', data);
 }
@@ -209,17 +209,17 @@ async function generateStartContent() {
     const cardImage = document.createElement('img');
     const cardText = document.createElement('p');
 
-    card.dataset.category = category['name_category'];
+    card.dataset.category = category.name_category;
 
     card.setAttribute('href', '#');
-    cardImage.setAttribute('src', category['picture_category']);
+    cardImage.setAttribute('src', category.picture_category);
 
     card.classList.add('category-card', 'card', 'category');
     cardWrapper.classList.add('category-card__wrapper', 'category');
     cardImage.classList.add('category-card__image', 'category');
     cardText.classList.add('card__text', 'category');
 
-    cardText.textContent = category['name_category'];
+    cardText.textContent = category.name_category;
 
     cardWrapper.append(cardImage);
     card.append(cardWrapper);
@@ -242,17 +242,17 @@ async function generateSidebar() {
   sidebar.append(createSidebarElement('a', '#', 'sidebar__link sidebar__link_active', 'Main Page'));
   sidebar.append(createSidebarElement('a', '#', 'sidebar__link', 'Stats'));
   categories.forEach((category) => {
-    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category['name_category']));
+    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category.name_category));
   });
 }
 
 async function determineCategoryId(categoryName) {
   const url = API.detectURL('determineCategoryId');
   const data = {
-    categoryName: categoryName
+    categoryName
   }
   const response = await sendRequest(url, 'POST', data);
-  return response["categoryId"];
+  return response.categoryId;
 }
 
 async function generateTrainMode(categoryId, playMode) {
@@ -280,8 +280,8 @@ async function generateTrainMode(categoryId, playMode) {
     }
   } else {
     const response = await getWords(categoryId);
-    title.textContent = response['name_category'];
-    words = response['words'];
+    title.textContent = response.name_category;
+    words = response.words;
   }
 
   words.forEach((wordObject, index) => {
@@ -373,13 +373,13 @@ function playSound(src) {
 }
 
 function soundWord(turn, index) {
-  playSound(turn[index]['audio_source']);
+  playSound(turn[index].audio_source);
 }
 
 async function startGame(categoryId) {
   const turn = [];
   let categoryWords = await getWords(openCategoryId);
-  categoryWords = categoryWords['words'];
+  categoryWords = categoryWords.words;
   const categoryWordsLength = categoryWords.length;
   for (let i = 0; i < categoryWordsLength; i += 1) {
     let number = generateRandomNumber(categoryWordsLength, 0);
@@ -434,7 +434,6 @@ async function gameEnd(numberErrors) {
   mainContent.append(gameEndWrapper);
 
   wordTurn = [];
-  // setTimeout(locationToMainPage, timeMessageOnGameEnd);
 
   await sendStats();
 }
@@ -467,7 +466,7 @@ function checkOnClickedCard(word, card) {
     } else {
       playSound(correctSound);
       setTimeout(() => {
-        playSound(wordTurn[numberQuestion + 1]["audio_source"]);
+        playSound(wordTurn[numberQuestion + 1].audio_source);
       }, timeOfSuccessSoundAndVoice);
       makeCardNonActive(card);
     }
@@ -728,18 +727,18 @@ body.addEventListener('click', async (event) => {
       let words = [];
       if (openCategoryId !== 'trainDifficultWordsMode') {
         words = await getWords(openCategoryId);
-        words = words['words'];
+        words = words.words;
       } else {
         words = difficultWords;
       }
       for (let j = 0; j < words.length; j += 1) {
         const wordObject = words[j];
         if (wordObject.translation === cardText) {
-          playSound(wordObject["audio_source"]);
+          playSound(wordObject.audio_source);
           break;
         } else if (wordObject[1]) {
           if (wordObject[1].translation === cardText) {
-            playSound(wordObject[1]["audio_source"]);
+            playSound(wordObject[1].audio_source);
             break;
           }
         }
