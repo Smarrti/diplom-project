@@ -1,5 +1,4 @@
 import '../css/style.scss';
-// import { cards as dictionary} from './Dictionary';
 import { placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
 import * as API from './RouteAPI';
 
@@ -692,7 +691,7 @@ body.addEventListener('click', async (event) => {
         if (document.querySelector('.main__title').textContent) {
           const categoryName = document.querySelector('.main__title').textContent;
           deleteContent();
-          generateTrainMode(categories.indexOf(categoryName) + 1, switcher.checked);
+          generateTrainMode(openCategoryId, switcher.checked);
         }	
       }
       break;
