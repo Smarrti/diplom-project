@@ -86,6 +86,13 @@ function createMessage(type, headMessage, textMessage) {
   body.append(messageBody);
 }
 
+function collectSimpleData() {
+  return {
+    token: sessionStorage.getItem('sessionToken'),
+    userId: sessionStorage.getItem('userId')
+  }
+}
+
 function deleteMessages() {
   const messages = document.querySelectorAll('.message');
   messages.forEach((e) => {
@@ -111,23 +118,17 @@ function resolveApiErrors(type) {
   }
 }
 
-async function getStats(token, userId) {
+async function getStats() {
   const url = API.detectURL('getStats');
-  const data = {
-    token,
-    userId
-  }
+  const data = collectSimpleData();
   const response = await sendRequest(url, 'POST', data);
   return response.stats;
 }
 
 async function sendStats() {
   const url = API.detectURL('setStats');
-  const data = {
-    token: sessionStorage.getItem('sessionToken'),
-    userId: sessionStorage.getItem('userId'),
-    stats: localStorage.getItem('stats')
-  }
+  let data = collectSimpleData();
+  data.stats = localStorage.getItem('stats');
   await sendRequest(url, 'POST', data);
 }
 
@@ -181,21 +182,15 @@ async function getWords(categoryId) {
 
 async function getPoints() {
   const url = API.detectURL('getPoints');
-  const data = {
-    token: sessionStorage.getItem('sessionToken'),
-    userId: sessionStorage.getItem('userId')
-  }
+  const data = collectSimpleData();
   return await sendRequest(url, 'POST', data);
 }
 
 async function addPoints(count) {
   const url = API.detectURL('setPoints');
   const points = await getPoints();
-  const data = {
-    token: sessionStorage.getItem('sessionToken'),
-    userId: sessionStorage.getItem('userId'),
-    points: +points['points'] + count
-  }
+  let data = collectSimpleData();
+  data.points = +points['points'] + count
   await sendRequest(url, 'POST', data);
 }
 
