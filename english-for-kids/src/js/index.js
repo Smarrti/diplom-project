@@ -9,7 +9,6 @@ const body = document.querySelector('body');
 let sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
-let difficultWords = [];
 
 async function sendRequest(url, method, data) {
   let response;
@@ -295,14 +294,17 @@ async function generateTrainMode(categoryId, playMode) {
   let words = [];
   if (categoryId === 'trainDifficultWordsMode') {
     title.textContent = 'Difficult words';
-    difficultWords = difficultWords.sort().reverse();
-    for (let i = 0; i < 8 && i < difficultWords.length; i += 1) {
-      words.push(difficultWords[i][1]);
+    let stats = await getStats();
+    stats = JSON.parse(stats);
+    let difficultWordsList = collectDifficultWords(stats);
+    difficultWordsList = changeCollectionOfDifficultWordsOnArray(difficultWordsList, countWordsOnCategory);
+    for (let i = 0; i < 8 && i < difficultWordsList.length; i += 1) {
+      words.push(difficultWordsList[i]);
     }
   } else {
     const response = await getWords(categoryId);
     title.textContent = response.name_category;
-    words = response.words;
+    words = response.words; 
   }
 
   words.forEach((wordObject, index) => {
@@ -526,7 +528,7 @@ function changeCollectionOfDifficultWordsOnArray(obj, countWords) {
   return difficultWords.slice(0, countWords);
 }
 
-function collectDifficultWords(stats, type) {
+function collectDifficultWords(stats) {
   let difficultWords = {};
   if (stats.choosenWrongWord) {
     Object.keys(stats.choosenWrongWord).forEach(word => {
@@ -540,12 +542,10 @@ function collectDifficultWords(stats, type) {
       difficultWords[`countMistakes${countMistakes}`].push(word);
     });
   }
-  changeCollectionOfDifficultWordsOnArray(difficultWords);
   return difficultWords;
 }
 
 async function createTableForStats(stats, statsContent) {
-  collectDifficultWords(stats);
   const categories = await getCategories();
   categories.forEach(async (category, index) => {
     const categoryId = await determineCategoryId(category.name_category);
