@@ -595,11 +595,6 @@ async function generateStatsPage() {
   mainTitle.textContent = 'Stats';
 
   mainPanel.append(createPanelButtons('panel__delete', 'Reset'));
-
-  if (stats !== '{}') {
-    mainPanel.append(createPanelButtons('panel__difficult-words', 'Repeat difficult words'));
-  }
-
   mainContent.append(mainTitle, mainPanel);
 
   stats = JSON.parse(stats);
