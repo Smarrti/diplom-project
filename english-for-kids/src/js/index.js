@@ -125,10 +125,13 @@ async function getStats() {
   return response.stats;
 }
 
-async function sendStats() {
+async function sendStats(type) {
   const url = API.detectURL('setStats');
   let data = collectSimpleData();
   data.stats = localStorage.getItem('stats');
+  if (type) {
+    data.stats ='{}';
+  }
   await sendRequest(url, 'POST', data);
 }
 
@@ -186,11 +189,14 @@ async function getPoints() {
   return await sendRequest(url, 'POST', data);
 }
 
-async function addPoints(count) {
+async function addPoints(count, type) {
   const url = API.detectURL('setPoints');
   const points = await getPoints();
   let data = collectSimpleData();
-  data.points = +points['points'] + count
+  data.points = +points['points'] + count;
+  if (type) {
+    data.points = 0;
+  }
   await sendRequest(url, 'POST', data);
 }
 
@@ -779,6 +785,8 @@ body.addEventListener('click', async (event) => {
       break;
     case target.classList.contains('panel__delete'):
       localStorage.setItem('stats', '{}');
+      await sendStats('clear');
+      await addPoints(0, 'clear');
       deleteContent();
       generateStatsPage();
       break;
