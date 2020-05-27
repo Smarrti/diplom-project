@@ -1,5 +1,5 @@
 import '../css/style.scss';
-import { placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
+import { countWordsOnCategory, placeMainHtmlFile, failureImg, successImg, timeMessageOnGameEnd , failureSound, successSound, correctSound, errorSound, timeOfSuccessSoundAndVoice } from './Constatnt';
 import * as API from './RouteAPI';
 
 const burgerButton = document.querySelector('.hamburger-menu');
@@ -177,6 +177,26 @@ async function getWords(categoryId) {
     categoryId
   }
   return await sendRequest(url, 'POST', data);
+}
+
+async function getPoints() {
+  const url = API.detectURL('getPoints');
+  const data = {
+    token: sessionStorage.getItem('sessionToken'),
+    userId: sessionStorage.getItem('userId')
+  }
+  return await sendRequest(url, 'POST', data);
+}
+
+async function addPoints(count) {
+  const url = API.detectURL('setPoints');
+  const points = await getPoints();
+  const data = {
+    token: sessionStorage.getItem('sessionToken'),
+    userId: sessionStorage.getItem('userId'),
+    points: +points['points'] + count
+  }
+  await sendRequest(url, 'POST', data);
 }
 
 function moveSidebar() {
@@ -437,6 +457,7 @@ async function gameEnd(numberErrors) {
 
   setTimeout(locationToMainPage, timeMessageOnGameEnd);
   await sendStats();
+  await addPoints(countWordsOnCategory - numberErrors);
 }
 
 function calcStats(type, card) {

@@ -22,6 +22,13 @@ export function detectURL(requestTo) {
       break;
     case 'setStats':
       prepareURL += 'setStats';
+      break;
+    case 'getPoints':
+      prepareURL += 'getPoints';
+      break;
+    case 'setPoints':
+      prepareURL += 'setPoints';
+      break;
     default:
       break;
   }
