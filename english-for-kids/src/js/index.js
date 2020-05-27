@@ -509,54 +509,51 @@ function createPanelButtons(className, text) {
   return button;
 }
 
-function createTableForStats(stats, statsContent) {
+async function createTableForStats(stats, statsContent) {
+  const categories = await getCategories();
   difficultWords = [];
-  dictionary.forEach((category, index) => {
-    if (index) {
-      const categoryNameRow = document.createElement('tr');
-      const categoryBlockText = document.createElement('td');
 
-      categoryBlockText.textContent = `Category ${categories[index]}`;
-
-      categoryNameRow.append(categoryBlockText);
-      statsContent.append(categoryNameRow);
-
-      category.forEach((word) => {
-        const categoryBlockRow = document.createElement('tr');
-        categoryBlockRow.append(createTdElement(`${word.word} (${word.translation})`));
-        Object.keys(stats).forEach((statsElement) => {
-          if (stats[statsElement][word.word]) {
-            categoryBlockRow.append(createTdElement(stats[statsElement][word.word]));
-          } else {
-            categoryBlockRow.append(createTdElement('0'));
+  categories.forEach(async (category, index) => {
+    const categoryId = await determineCategoryId(category.name_category);
+    const words = await getWords(categoryId);
+    let numberClicksOfCard = 0;
+    let categoryChoosenRightWord = 0;
+    let categoryChoosenWrongWord = 0;
+    const categoryRow = document.createElement('tr');
+    words.words.forEach((word) => {
+      Object.keys(stats).forEach((statsElement) => {
+        if (stats[statsElement][word.word]) {
+          const number = stats[statsElement][word.word];
+          switch (statsElement) {
+            case 'clickOnCard':
+              numberClicksOfCard += number;
+              break;
+            case 'choosenRightWord':
+              categoryChoosenRightWord += number;
+              break;
+            case 'choosenWrongWord':
+              categoryChoosenWrongWord += number;
+              break;
+            default:
+              break;
           }
-        })
-        let percentWrongAttempts;
-        if (stats.choosenRightWord && stats.choosenWrongWord) {
-          percentWrongAttempts = 100 / (stats.choosenRightWord[word.word] / stats.choosenWrongWord[word.word]);
         }
-        if (Number.isNaN(percentWrongAttempts)) {
-          percentWrongAttempts = '-';
-        } else {
-          const objWord = word.word;
-          const {translation} = word;
-          const {image} = word;
-          const {audioSrc} = word;
-          difficultWords.push([percentWrongAttempts, {'word': objWord, translation, image, audioSrc}]);
-        }
-        categoryBlockRow.append(createTdElement(percentWrongAttempts));
-
-        statsContent.append(categoryBlockRow);	
       })
-    }
+    })
+    categoryRow.append(createTdElement(`Category ${categories[index].name_category}`));
+    categoryRow.append(createTdElement(numberClicksOfCard));
+    categoryRow.append(createTdElement(categoryChoosenRightWord));
+    categoryRow.append(createTdElement(categoryChoosenWrongWord));
+    statsContent.append(categoryRow);	
   });
   return statsContent;
 }
 
-function generateStatsPage() {
+async function generateStatsPage() {
   const mainContent = document.querySelector('.main');
   const mainTitle = document.createElement('div');
   const mainPanel = document.createElement('div');
+  let stats = await getStats();
 
   mainTitle.classList.add('stats__title');
   mainPanel.classList.add('stats__panel');
@@ -565,13 +562,13 @@ function generateStatsPage() {
 
   mainPanel.append(createPanelButtons('panel__delete', 'Reset'));
 
-  if (localStorage.getItem('stats') !== '{}') {
+  if (stats !== '{}') {
     mainPanel.append(createPanelButtons('panel__difficult-words', 'Repeat difficult words'));
   }
 
   mainContent.append(mainTitle, mainPanel);
 
-  const stats = JSON.parse(localStorage.getItem('stats'));
+  stats = JSON.parse(stats);
   
   const statsContent = document.createElement('table');
   statsContent.classList.add('stats__content');
@@ -579,10 +576,9 @@ function generateStatsPage() {
   const statsTitle = document.createElement('tr');
   statsTitle.append(createTdElement(' '), createTdElement('Number of clicks on card'));
   statsTitle.append(createTdElement('Choosen right word'), createTdElement('Choosen wrong word'));
-  statsTitle.append(createTdElement('% wrong attempts'));
   statsContent.append(statsTitle);
 
-  mainContent.append(createTableForStats(stats, statsContent));
+  mainContent.append(await createTableForStats(stats, statsContent));
 }
 
 function generateModal() {
@@ -696,7 +692,7 @@ body.addEventListener('click', async (event) => {
   switch (true) {
     case target.classList.contains('stats-button'):
       deleteContent();
-      generateStatsPage();
+      await generateStatsPage();
       changeSidebarLinkActive('Stats');
       break;
     case target.classList.contains('card_play'):
