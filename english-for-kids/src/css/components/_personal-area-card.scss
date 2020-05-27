@@ -1,0 +1,30 @@
+.personal-area {
+  display: flex;
+  width: 700px;
+  margin: 20px auto;
+  font-size: 2rem;
+  border-radius: 5px;
+  box-shadow: 0 0 10px black;
+  &__menu {
+    width: 350px;
+  }
+  &__controls {
+    text-align: center;
+    cursor: pointer;
+    &_active {
+      color: $color-darkness;
+    }
+  }
+  &__logout {
+    color: $color-retry-first;
+    cursor: pointer;
+  }
+}
+
+.personal-information {
+  &__key {
+    display: inline-block;
+    margin-right: 10px;
+    color: $color-darkness;
+  }
+}
