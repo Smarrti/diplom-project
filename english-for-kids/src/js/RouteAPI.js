@@ -29,6 +29,9 @@ export function detectURL(requestTo) {
     case 'setPoints':
       prepareURL += 'setPoints';
       break;
+    case 'getInformationAboutUser':
+      prepareURL += 'getDataAboutUser';
+      break;
     default:
       break;
   }

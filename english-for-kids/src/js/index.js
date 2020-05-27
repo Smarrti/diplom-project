@@ -696,10 +696,6 @@ function generateAuthorizationForm(type) {
   modalCard.append(formImage, formWrapper);
 }
 
-function generatePersonalArea() {
-  
-}
-
 deleteContent();
 
 if (sessionToken) {
