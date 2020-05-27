@@ -87,7 +87,7 @@ function createMessage(type, headMessage, textMessage) {
 
 function collectSimpleData() {
   return {
-    token: sessionStorage.getItem('sessionToken'),
+    token: sessionToken,
     userId: sessionStorage.getItem('userId')
   }
 }
