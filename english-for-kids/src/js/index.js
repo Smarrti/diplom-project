@@ -6,6 +6,7 @@ const burgerButton = document.querySelector('.hamburger-menu');
 const sidebarWrapper = document.querySelector('.sidebar-wrapper');
 const switcher = document.querySelector('.switch-input');
 const body = document.querySelector('body');
+const mainContent = document.querySelector('.main');
 let sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
@@ -209,7 +210,7 @@ function moveSidebar() {
 
 function deleteContent() {
   wordTurn = [];
-  document.querySelector('.main').innerHTML = '';
+  mainContent.innerHTML = '';
 }
 
 burgerButton.addEventListener('click', moveSidebar);
@@ -220,7 +221,6 @@ sidebarWrapper.addEventListener('click', () => {
 });
 
 async function generateStartContent() {
-  const mainContent = document.querySelector('.main');
   const categories = await getCategories();
 
   categories.forEach((category, index) => {
@@ -276,8 +276,6 @@ async function determineCategoryId(categoryName) {
 }
 
 async function generateTrainMode(categoryId, playMode) {
-  const mainContent = document.querySelector('.main');
-
   openCategoryId = categoryId;
 
   const title = document.createElement('div');
@@ -433,8 +431,6 @@ function locationToMainPage() {
 async function gameEnd(numberErrors) {
   deleteContent();
 
-  const mainContent = document.querySelector('.main');
-
   const gameEndWrapper = document.createElement('div');
   const gameEndImage = document.createElement('img');
   const gameEndText = document.createElement('p');
@@ -584,7 +580,6 @@ async function createTableForStats(stats, statsContent) {
 }
 
 async function generateStatsPage() {
-  const mainContent = document.querySelector('.main');
   const mainTitle = document.createElement('div');
   const mainPanel = document.createElement('div');
   let stats = await getStats();
@@ -701,6 +696,10 @@ function generateAuthorizationForm(type) {
   modalCard.append(formImage, formWrapper);
 }
 
+function generatePersonalArea() {
+  
+}
+
 deleteContent();
 
 if (sessionToken) {
@@ -760,7 +759,6 @@ body.addEventListener('click', async (event) => {
         const element = path[i];
         if (element.classList.contains('word-card')) {
           cardText = event.path[i].querySelector('.word-card__text').textContent;
-          
           const word = element.querySelector('.word-card__text:not(.word-card__translation)');
           calcStats('clickOnCard', word.textContent);
           break;
@@ -845,6 +843,9 @@ body.addEventListener('click', async (event) => {
       } else {
         generateAuthorizationForm('login');
       }
+      break;
+    case target.classList.contains('pesonal-area-button'):
+      deleteContent();
       break;
     default:
       break;
