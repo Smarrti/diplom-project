@@ -515,10 +515,19 @@ function createPanelButtons(className, text) {
   return button;
 }
 
-function collectDifficultWords(stats) {
-  difficultWords = {
-    maxMistakes: 0
-  };
+function changeCollectionOfDifficultWordsOnArray(obj, countWords) {
+  const difficultWords = [];
+  const sortedListOfMistakesCount = Object.keys(obj).map((e) => +e.slice(13)).sort((a, b) => b - a);
+  sortedListOfMistakesCount.forEach((number) => {
+    obj[`countMistakes${number}`].forEach((word) => {
+      difficultWords.push(word);
+    })
+  });
+  return difficultWords.slice(0, countWords);
+}
+
+function collectDifficultWords(stats, type) {
+  let difficultWords = {};
   if (stats.choosenWrongWord) {
     Object.keys(stats.choosenWrongWord).forEach(word => {
       const countMistakes = stats.choosenWrongWord[word];
@@ -531,13 +540,13 @@ function collectDifficultWords(stats) {
       difficultWords[`countMistakes${countMistakes}`].push(word);
     });
   }
+  changeCollectionOfDifficultWordsOnArray(difficultWords);
   return difficultWords;
 }
 
 async function createTableForStats(stats, statsContent) {
+  collectDifficultWords(stats);
   const categories = await getCategories();
-  difficultWords = collectDifficultWords(stats);
-
   categories.forEach(async (category, index) => {
     const categoryId = await determineCategoryId(category.name_category);
     const words = await getWords(categoryId);
