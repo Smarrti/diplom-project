@@ -200,6 +200,12 @@ async function addPoints(count, type) {
   await sendRequest(url, 'POST', data);
 }
 
+async function getInformationAboutUser() {
+  const url = API.detectURL('getInformationAboutUser');
+  const data = collectSimpleData();
+  return await sendRequest(url, 'POST', data);
+}
+
 function moveSidebar() {
   const hamburgerButton = document.querySelector('.hamburger');
   const sidebar = document.querySelector('.sidebar');
@@ -696,11 +702,65 @@ function generateAuthorizationForm(type) {
   modalCard.append(formImage, formWrapper);
 }
 
+function generateInformationRowAboutUser(key, value) {
+  const row = document.createElement('div');
+  const informationKey = document.createElement('span');
+  const informationValue = document.createElement('span');
+
+  informationKey.classList.add('personal-information__key');
+  
+  informationKey.textContent = key;
+  informationValue.textContent = value;
+
+  row.append(informationKey, informationValue);
+
+  return row;
+}
+
+async function generatePersonalArea() {
+  const dataUser = await getInformationAboutUser();
+  const personalAreaWrapper = document.createElement('div');
+  const personalAreaMenu = document.createElement('div');
+  const personalImage = document.createElement('object');
+  const personalControls = document.createElement('div');
+  const personalControlGeneral = document.createElement('div');
+  const personalControlPassword = document.createElement('div');
+  const personalInformation = document.createElement('div');
+  const personalAreaLogout = document.createElement('div');
+
+  personalAreaWrapper.classList.add('personal-area');
+  personalAreaMenu.classList.add('personal-area__menu');
+  personalImage.classList.add('personal-area__image');
+  personalControlGeneral.classList.add('personal-area__controls', 'personal-area__controls_active');
+  personalControlPassword.classList.add('personal-area__controls');
+  personalInformation.classList.add('personal-information');
+  personalAreaLogout.classList.add('personal-area__logout');
+
+  personalImage.setAttribute('type', 'image/svg+xml');
+  personalImage.setAttribute('data', './assets/img/personal-area.svg');
+
+  personalImage.textContent = 'Your browser does not support SVG';
+  personalControlGeneral.textContent = 'General information';
+  personalControlPassword.textContent = 'Change Password';
+  personalAreaLogout.textContent = 'Выход из системы';
+
+  personalInformation.append(generateInformationRowAboutUser('Имя:', `${dataUser['surnameUser']} ${dataUser['nameUser']}`));
+  personalInformation.append(generateInformationRowAboutUser('Дата рождения:', `${dataUser['date_birth']}`));
+  personalInformation.append(generateInformationRowAboutUser('Дата регистрации:', `${dataUser['date_registration']}`));
+  personalInformation.append(generateInformationRowAboutUser('Количество баллов:', `${dataUser['points']}`));
+  personalInformation.append(personalAreaLogout);
+  personalControls.append(personalControlGeneral, personalControlPassword);
+  personalAreaMenu.append(personalImage, personalControls);
+  personalAreaWrapper.append(personalAreaMenu, personalInformation);
+  mainContent.append(personalAreaWrapper);
+}
+
 deleteContent();
 
 if (sessionToken) {
-  generateStartContent();
+  // generateStartContent();
   generateSidebar();
+  generatePersonalArea();
 } else {
   generateAuthorizationForm('login');
 }
