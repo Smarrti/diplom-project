@@ -515,9 +515,28 @@ function createPanelButtons(className, text) {
   return button;
 }
 
+function collectDifficultWords(stats) {
+  difficultWords = {
+    maxMistakes: 0
+  };
+  if (stats.choosenWrongWord) {
+    Object.keys(stats.choosenWrongWord).forEach(word => {
+      const countMistakes = stats.choosenWrongWord[word];
+      if (countMistakes > difficultWords.maxMistakes) {
+        difficultWords.maxMistakes = countMistakes;
+      }
+      if (!difficultWords[`countMistakes${countMistakes}`]) {
+        difficultWords[`countMistakes${countMistakes}`] = [];
+      }
+      difficultWords[`countMistakes${countMistakes}`].push(word);
+    });
+  }
+  return difficultWords;
+}
+
 async function createTableForStats(stats, statsContent) {
   const categories = await getCategories();
-  difficultWords = [];
+  difficultWords = collectDifficultWords(stats);
 
   categories.forEach(async (category, index) => {
     const categoryId = await determineCategoryId(category.name_category);
