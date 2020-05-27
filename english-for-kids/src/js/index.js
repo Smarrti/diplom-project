@@ -758,9 +758,8 @@ async function generatePersonalArea() {
 deleteContent();
 
 if (sessionToken) {
-  // generateStartContent();
+  generateStartContent();
   generateSidebar();
-  generatePersonalArea();
 } else {
   generateAuthorizationForm('login');
 }
@@ -902,6 +901,7 @@ body.addEventListener('click', async (event) => {
       break;
     case target.classList.contains('pesonal-area-button'):
       deleteContent();
+      generatePersonalArea();
       break;
     default:
       break;
