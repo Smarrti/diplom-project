@@ -206,6 +206,24 @@ async function getInformationAboutUser() {
   return await sendRequest(url, 'POST', data);
 }
 
+async function changePassword(oldPassword, newPassword, retryPassword) {
+  const url = API.detectURL('changePassword');
+
+  if (!oldPassword || !newPassword || !retryPassword) {
+    createMessage('notify', 'Ошибка данных', 'Все поля должны быть заполнены');
+  } else if (newPassword !== retryPassword) {
+    createMessage('notify', 'Ошибка данных', 'Новый пароль отличается от повторяемого');
+  } else {
+    let data = collectSimpleData();
+    data.currentPassword = oldPassword;
+    data.newPassword = newPassword;
+    const response = await sendRequest(url, 'POST', data);
+    if (response.Success = 'Password changed') {
+      createMessage('success', 'Успешно', 'Пароль изменен');
+    }
+  }
+}
+
 function moveSidebar() {
   const hamburgerButton = document.querySelector('.hamburger');
   const sidebar = document.querySelector('.sidebar');
