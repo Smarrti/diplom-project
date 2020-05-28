@@ -112,6 +112,9 @@ function resolveApiErrors(type) {
     case 'Account not found':
       createMessage('warning', 'Error', 'Login or password are wrong');
       break;
+    case 'Current password is wrong':
+      createMessage('warning', 'Ошибка', 'Не верный пароль');
+      break;
     default:
       validError = false;
       break;
