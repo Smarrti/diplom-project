@@ -9,7 +9,7 @@ if ($method != "POST" &&
 } else {
   $validToken = checkToken($formData['token'], $formData['userId']);
   if ($validToken == 'Token valid') {
-    $sql = "SELECT `surname_user`, `name_user`, `date_birth`, `stats`, `status` FROM `users` WHERE `id_user` = ?";
+    $sql = "SELECT `surname_user`, `name_user`, `date_birth`, `date_registration` AS `registration`, `stats`, `status`, `points` FROM `users` WHERE `id_user` = ?";
     $dbRequest = $db -> prepare($sql);
     if ($dbRequest -> execute(array($formData['userId']))) {
       $dbResponse = $dbRequest -> fetchAll(PDO::FETCH_ASSOC)[0];
@@ -17,8 +17,10 @@ if ($method != "POST" &&
       $response['surnameUser'] = $dbResponse['surname_user'];
       $response['nameUser'] = $dbResponse['name_user'];
       $response['date_birth'] = $dbResponse['date_birth'];
+      $response['date_registration'] = $dbResponse['registration'];
       $response['stats'] = $dbResponse['stats'];
       $response['status'] = $dbResponse['status'];
+      $response['points'] = $dbResponse['points'];
       $code = 200;
     } else {
       $response['Error'] = 'Data base error';
