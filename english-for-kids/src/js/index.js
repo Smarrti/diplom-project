@@ -784,7 +784,7 @@ function generatePasswordFormOfPersonalArea() {
 
   changePasswordForm.setAttribute('action', '#');
   changePasswordForm.setAttribute('method', 'POST');
-  formSubmit.setAttribute('type', 'submit');
+  formSubmit.setAttribute('type', 'button ');
 
   changePasswordHeader.textContent = 'Изменение пароля';
 
@@ -989,6 +989,12 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('personal-area__general'):
       deleteContent();
       generatePersonalAreaWrapper();
+    case target.classList.contains('change-password__submit'):
+      const oldPassword = document.querySelector('.change-password__old').value;
+      const newPassword = document.querySelector('.change-password__new').value;
+      const retryPassword = document.querySelector('.change-password__retry').value;
+      await changePassword(oldPassword, newPassword, retryPassword);
+      break;
     default:
       break;
   }
