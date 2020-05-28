@@ -11,34 +11,6 @@ let sessionToken = sessionStorage.getItem('sessionToken');
 let wordTurn = [];
 let openCategoryId;
 
-async function sendRequest(url, method, data) {
-  let response;
-  await fetch(url, {
-    method,
-    headers: {
-      'Accept': 'application/json, text/plain, */*',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-  })
-  .then((res) => {
-    if (res.status !== 200) {
-      return Promise.reject(new Error(res.statusText));
-    }
-    return Promise.resolve(res)
-  })
-  .then((res) => res.json())
-  .then(json => {response = json})
-  .catch(() => {
-    resolveApiErrors('Request error');
-  })
-  if (response.Error) {
-    resolveApiErrors(response.Error);
-    return 'Error'
-  }
-  return response;
-}
-
 function createMessage(type, headMessage, textMessage) {
   const messageBody = document.createElement('div');
   const messageImageWrapper = document.createElement('div');
@@ -74,7 +46,8 @@ function createMessage(type, headMessage, textMessage) {
       break;
     case 'complete':
       messageImageWrapper.classList.add('message__image-wrapper_complete');
-      messageImage.setAttribute('src', './assets/img/complete.png')
+      messageImage.setAttribute('src', './assets/img/complete.png');
+      break;
     default:
       break;
   }
@@ -84,20 +57,6 @@ function createMessage(type, headMessage, textMessage) {
   messageWrapper.append(messageCloseWrapper, messageHead, messageText);
   messageBody.append(messageImageWrapper, messageWrapper);
   body.append(messageBody);
-}
-
-function collectSimpleData() {
-  return {
-    token: sessionToken,
-    userId: sessionStorage.getItem('userId')
-  }
-}
-
-function deleteMessages() {
-  const messages = document.querySelectorAll('.message');
-  messages.forEach((e) => {
-    body.removeChild(e);
-  })
 }
 
 function resolveApiErrors(type) {
@@ -116,9 +75,50 @@ function resolveApiErrors(type) {
       createMessage('warning', 'Ошибка', 'Не верный пароль');
       break;
     default:
-      validError = false;
       break;
   }
+}
+
+async function sendRequest(url, method, data) {
+  let response;
+  await fetch(url, {
+    method,
+    headers: {
+      'Accept': 'application/json, text/plain, */*',
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify(data)
+  })
+  .then((res) => {
+    if (res.status !== 200) {
+      return Promise.reject(new Error(res.statusText));
+    }
+    return Promise.resolve(res)
+  })
+  .then((res) => res.json())
+  .then(json => {response = json})
+  .catch(() => {
+    resolveApiErrors('Request error');
+  })
+  if (response.Error) {
+    resolveApiErrors(response.Error);
+    return 'Error'
+  }
+  return response;
+}
+
+function collectSimpleData() {
+  return {
+    token: sessionToken,
+    userId: sessionStorage.getItem('userId')
+  }
+}
+
+function deleteMessages() {
+  const messages = document.querySelectorAll('.message');
+  messages.forEach((e) => {
+    body.removeChild(e);
+  })
 }
 
 async function getStats() {
@@ -136,6 +136,149 @@ async function sendStats(type) {
     data.stats ='{}';
   }
   await sendRequest(url, 'POST', data);
+}
+
+async function getCategories() {
+  const url = API.detectURL('categories');
+  const response = await sendRequest(url, 'GET');
+  return response;
+}
+
+async function getWords(categoryId) {
+  const url = API.detectURL('words');
+  const data = {
+    categoryId
+  }
+  const response = await sendRequest(url, 'POST', data);
+  return response;
+}
+
+async function getPoints() {
+  const url = API.detectURL('getPoints');
+  const data = collectSimpleData();
+  const response = await sendRequest(url, 'POST', data);
+  return response;
+}
+
+async function addPoints(count, type) {
+  const url = API.detectURL('setPoints');
+  const points = await getPoints();
+  const data = collectSimpleData();
+  data.points = +points.points + count;
+  if (type) {
+    data.points = 0;
+  }
+  await sendRequest(url, 'POST', data);
+}
+
+async function getInformationAboutUser() {
+  const url = API.detectURL('getInformationAboutUser');
+  const data = collectSimpleData();
+  const response = await sendRequest(url, 'POST', data)
+  return response;
+}
+
+async function changePassword(oldPassword, newPassword, retryPassword) {
+  const url = API.detectURL('changePassword');
+
+  if (!oldPassword || !newPassword || !retryPassword) {
+    createMessage('warning', 'Ошибка данных', 'Все поля должны быть заполнены');
+  } else if (newPassword !== retryPassword) {
+    createMessage('warning', 'Ошибка данных', 'Новый пароль отличается от повторяемого');
+  } else {
+    const data = collectSimpleData();
+    data.currentPassword = oldPassword;
+    data.newPassword = newPassword;
+    const response = await sendRequest(url, 'POST', data);
+    if (response.Success === 'Password changed') {
+      createMessage('complete', 'Успешно', 'Пароль изменен');
+    }
+  }
+}
+
+function moveSidebar() {
+  const hamburgerButton = document.querySelector('.hamburger');
+  const sidebar = document.querySelector('.sidebar');
+  hamburgerButton.classList.toggle('hamburger_active');
+  sidebarWrapper.classList.toggle('sidebar-wrapper_active');
+  sidebar.classList.toggle('sidebar_active');
+}
+
+function deleteContent() {
+  wordTurn = [];
+  mainContent.innerHTML = '';
+}
+
+burgerButton.addEventListener('click', moveSidebar);
+sidebarWrapper.addEventListener('click', () => {
+  if (sidebarWrapper.classList.contains('sidebar-wrapper_active')) {
+    moveSidebar();
+  }
+});
+
+async function generateStartContent() {
+  const categories = await getCategories();
+
+  categories.forEach((category) => {
+    const card = document.createElement('a');
+    const cardWrapper = document.createElement('div');
+    const cardImage = document.createElement('img');
+    const cardText = document.createElement('p');
+
+    card.dataset.category = category.name_category;
+
+    card.setAttribute('href', '#');
+    cardImage.setAttribute('src', category.picture_category);
+
+    card.classList.add('category-card', 'card', 'category');
+    cardWrapper.classList.add('category-card__wrapper', 'category');
+    cardImage.classList.add('category-card__image', 'category');
+    cardText.classList.add('card__text', 'category');
+
+    cardText.textContent = category.name_category;
+
+    cardWrapper.append(cardImage);
+    card.append(cardWrapper);
+    card.append(cardText);
+    mainContent.append(card);
+  })
+}
+
+function createSidebarElement(tag, href, className, nameLink) {
+  const link = document.createElement(tag);
+  link.setAttribute('href', href);
+  link.className = className;
+  link.textContent = nameLink;
+  return link;
+}
+
+function generateModal() {
+  const modalWrapper = document.createElement('div');
+  const modalCard = document.createElement('div');
+
+  modalWrapper.classList.add('modal');
+  modalCard.classList.add('modal__card');
+
+  modalWrapper.append(modalCard);
+  body.append(modalWrapper);
+  return modalCard;
+}
+
+function deleteModals() {
+  const modals = document.querySelectorAll('.modal');
+  modals.forEach((e) => {
+    body.removeChild(e);
+  });
+}
+
+async function generateSidebar() {
+  const categories = await getCategories();
+  const sidebar = document.querySelector('.sidebar');
+  sidebar.append(createSidebarElement('a', '#', 'sidebar__link sidebar__link_active', 'Main Page'));
+  sidebar.append(createSidebarElement('a', '#', 'sidebar__link', 'Stats'));
+  categories.forEach((category) => {
+    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category.name_category));
+  });
 }
 
 async function apiLoginInSystem(login, password) {
@@ -173,126 +316,6 @@ async function apiRegisterInSystem(surname, name, birthday, login, password) {
   createMessage('complete', 'Успешно', 'Вы зарегистрированы в системе')
 }
 
-async function getCategories() {
-  const url = API.detectURL('categories');
-  return await sendRequest(url, 'GET');
-}
-
-async function getWords(categoryId) {
-  const url = API.detectURL('words');
-  const data = {
-    categoryId
-  }
-  return await sendRequest(url, 'POST', data);
-}
-
-async function getPoints() {
-  const url = API.detectURL('getPoints');
-  const data = collectSimpleData();
-  return await sendRequest(url, 'POST', data);
-}
-
-async function addPoints(count, type) {
-  const url = API.detectURL('setPoints');
-  const points = await getPoints();
-  const data = collectSimpleData();
-  data.points = +points.points + count;
-  if (type) {
-    data.points = 0;
-  }
-  await sendRequest(url, 'POST', data);
-}
-
-async function getInformationAboutUser() {
-  const url = API.detectURL('getInformationAboutUser');
-  const data = collectSimpleData();
-  return await sendRequest(url, 'POST', data);
-}
-
-async function changePassword(oldPassword, newPassword, retryPassword) {
-  const url = API.detectURL('changePassword');
-
-  if (!oldPassword || !newPassword || !retryPassword) {
-    createMessage('warning', 'Ошибка данных', 'Все поля должны быть заполнены');
-  } else if (newPassword !== retryPassword) {
-    createMessage('warning', 'Ошибка данных', 'Новый пароль отличается от повторяемого');
-  } else {
-    const data = collectSimpleData();
-    data.currentPassword = oldPassword;
-    data.newPassword = newPassword;
-    const response = await sendRequest(url, 'POST', data);
-    if (response.Success = 'Password changed') {
-      createMessage('complete', 'Успешно', 'Пароль изменен');
-    }
-  }
-}
-
-function moveSidebar() {
-  const hamburgerButton = document.querySelector('.hamburger');
-  const sidebar = document.querySelector('.sidebar');
-  hamburgerButton.classList.toggle('hamburger_active');
-  sidebarWrapper.classList.toggle('sidebar-wrapper_active');
-  sidebar.classList.toggle('sidebar_active');
-}
-
-function deleteContent() {
-  wordTurn = [];
-  mainContent.innerHTML = '';
-}
-
-burgerButton.addEventListener('click', moveSidebar);
-sidebarWrapper.addEventListener('click', () => {
-  if (sidebarWrapper.classList.contains('sidebar-wrapper_active')) {
-    moveSidebar();
-  }
-});
-
-async function generateStartContent() {
-  const categories = await getCategories();
-
-  categories.forEach((category, index) => {
-    const card = document.createElement('a');
-    const cardWrapper = document.createElement('div');
-    const cardImage = document.createElement('img');
-    const cardText = document.createElement('p');
-
-    card.dataset.category = category.name_category;
-
-    card.setAttribute('href', '#');
-    cardImage.setAttribute('src', category.picture_category);
-
-    card.classList.add('category-card', 'card', 'category');
-    cardWrapper.classList.add('category-card__wrapper', 'category');
-    cardImage.classList.add('category-card__image', 'category');
-    cardText.classList.add('card__text', 'category');
-
-    cardText.textContent = category.name_category;
-
-    cardWrapper.append(cardImage);
-    card.append(cardWrapper);
-    card.append(cardText);
-    mainContent.append(card);
-  })
-}
-
-function createSidebarElement(tag, href, className, nameLink) {
-  const link = document.createElement(tag);
-  link.setAttribute('href', href);
-  link.className = className;
-  link.textContent = nameLink;
-  return link;
-}
-
-async function generateSidebar() {
-  const categories = await getCategories();
-  const sidebar = document.querySelector('.sidebar');
-  sidebar.append(createSidebarElement('a', '#', 'sidebar__link sidebar__link_active', 'Main Page'));
-  sidebar.append(createSidebarElement('a', '#', 'sidebar__link', 'Stats'));
-  categories.forEach((category) => {
-    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category.name_category));
-  });
-}
-
 async function determineCategoryId(categoryName) {
   const url = API.detectURL('determineCategoryId');
   const data = {
@@ -300,6 +323,34 @@ async function determineCategoryId(categoryName) {
   }
   const response = await sendRequest(url, 'POST', data);
   return response.categoryId;
+}
+
+function collectDifficultWords(stats) {
+  const difficultWords = {};
+  if (stats.choosenWrongWord) {
+    Object.keys(stats.choosenWrongWord).forEach(word => {
+      const countMistakes = stats.choosenWrongWord[word];
+      if (countMistakes > difficultWords.maxMistakes) {
+        difficultWords.maxMistakes = countMistakes;
+      }
+      if (!difficultWords[`countMistakes${countMistakes}`]) {
+        difficultWords[`countMistakes${countMistakes}`] = [];
+      }
+      difficultWords[`countMistakes${countMistakes}`].push(word);
+    });
+  }
+  return difficultWords;
+}
+
+function changeCollectionOfDifficultWordsOnArray(obj, countWords) {
+  const difficultWords = [];
+  const sortedListOfMistakesCount = Object.keys(obj).map((e) => +e.slice(13)).sort((a, b) => b - a);
+  sortedListOfMistakesCount.forEach((number) => {
+    obj[`countMistakes${number}`].forEach((word) => {
+      difficultWords.push(word);
+    })
+  });
+  return difficultWords.slice(0, countWords);
 }
 
 async function generateTrainMode(categoryId, playMode) {
@@ -424,7 +475,7 @@ function soundWord(turn, index) {
   playSound(turn[index].audio_source);
 }
 
-async function startGame(categoryId) {
+async function startGame() {
   const turn = [];
   let categoryWords = await getWords(openCategoryId);
   categoryWords = categoryWords.words;
@@ -544,34 +595,6 @@ function createPanelButtons(className, text) {
   return button;
 }
 
-function changeCollectionOfDifficultWordsOnArray(obj, countWords) {
-  const difficultWords = [];
-  const sortedListOfMistakesCount = Object.keys(obj).map((e) => +e.slice(13)).sort((a, b) => b - a);
-  sortedListOfMistakesCount.forEach((number) => {
-    obj[`countMistakes${number}`].forEach((word) => {
-      difficultWords.push(word);
-    })
-  });
-  return difficultWords.slice(0, countWords);
-}
-
-function collectDifficultWords(stats) {
-  const difficultWords = {};
-  if (stats.choosenWrongWord) {
-    Object.keys(stats.choosenWrongWord).forEach(word => {
-      const countMistakes = stats.choosenWrongWord[word];
-      if (countMistakes > difficultWords.maxMistakes) {
-        difficultWords.maxMistakes = countMistakes;
-      }
-      if (!difficultWords[`countMistakes${countMistakes}`]) {
-        difficultWords[`countMistakes${countMistakes}`] = [];
-      }
-      difficultWords[`countMistakes${countMistakes}`].push(word);
-    });
-  }
-  return difficultWords;
-}
-
 async function createTableForStats(stats, statsContent) {
   const categories = await getCategories();
   categories.forEach(async (category, index) => {
@@ -634,25 +657,6 @@ async function generateStatsPage() {
   statsContent.append(statsTitle);
 
   mainContent.append(await createTableForStats(stats, statsContent));
-}
-
-function generateModal() {
-  const modalWrapper = document.createElement('div');
-  const modalCard = document.createElement('div');
-
-  modalWrapper.classList.add('modal');
-  modalCard.classList.add('modal__card');
-
-  modalWrapper.append(modalCard);
-  body.append(modalWrapper);
-  return modalCard;
-}
-
-function deleteModals() {
-  const modals = document.querySelectorAll('.modal');
-  modals.forEach((e) => {
-    body.removeChild(e);
-  });
 }
 
 function generateLabelForm(inputType, inputClass, text) {
@@ -863,18 +867,21 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('word-card__rotate'):
       rotateCard(path[2]);
       break;
-    case target.classList.contains('category'):
+    case target.classList.contains('category'): {
+      let category;
       for (let i = 0; i < path.length - 2; i += 1) {
         const tag = path[i];
         if (tag.classList.contains('category-card')) {
-          const categoryId = await determineCategoryId(tag.dataset.category);
-          deleteContent();
-          generateTrainMode(categoryId, switcher.checked);
-          changeSidebarLinkActive(tag.dataset.category);
+          category = tag;
           break;
         }	
       }
+      const categoryId = await determineCategoryId(category.dataset.category);
+      deleteContent();
+      generateTrainMode(categoryId, switcher.checked);
+      changeSidebarLinkActive(category.dataset.category);
       break;
+    }
     case target.classList.contains('sidebar__link'):
       deleteContent();
       if (textEvent === 'Main Page') {
@@ -900,8 +907,6 @@ body.addEventListener('click', async (event) => {
       if (openCategoryId !== 'trainDifficultWordsMode') {
         words = await getWords(openCategoryId);
         words = words.words;
-      } else {
-        words = difficultWords;
       }
       for (let j = 0; j < words.length; j += 1) {
         const wordObject = words[j];
@@ -920,7 +925,6 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('switch-input'):
       if (document.querySelector('.main__title') !== null) {
         if (document.querySelector('.main__title').textContent) {
-          const categoryName = document.querySelector('.main__title').textContent;
           deleteContent();
           generateTrainMode(openCategoryId, switcher.checked);
         }	
@@ -943,11 +947,12 @@ body.addEventListener('click', async (event) => {
       deleteContent();
       generateStatsPage();
       break;
-    case target.classList.contains('button__login'):
+    case target.classList.contains('button__login'): {
       const login = document.querySelector('.form__login').value;
       const password = document.querySelector('.form__password').value;
       apiLoginInSystem(login, password);
       break;
+    }
     case target.classList.contains('button__reg'): {
       const surname = document.querySelector('.form__surname').value;
       const name = document.querySelector('.form__name').value;
@@ -967,7 +972,7 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('message__close'):
       deleteMessages();
       break;
-    case target.classList.contains('auth__switch'):
+    case target.classList.contains('auth__switch'): {
       const textContentOfSwitcher = target.textContent;
       deleteModals();
       if (textContentOfSwitcher === 'Нет аккаунта? Регистрация') {
@@ -976,6 +981,7 @@ body.addEventListener('click', async (event) => {
         generateAuthorizationForm('login');
       }
       break;
+    }
     case target.classList.contains('pesonal-area-button'):
       deleteContent();
       generatePersonalAreaWrapper();
@@ -993,12 +999,14 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('personal-area__general'):
       deleteContent();
       generatePersonalAreaWrapper();
-    case target.classList.contains('change-password__submit'):
+      break;
+    case target.classList.contains('change-password__submit'): {
       const oldPassword = document.querySelector('.change-password__old').value;
       const newPassword = document.querySelector('.change-password__new').value;
       const retryPassword = document.querySelector('.change-password__retry').value;
       await changePassword(oldPassword, newPassword, retryPassword);
       break;
+    }
     default:
       break;
   }
