@@ -437,17 +437,21 @@ function locationToMainPage() {
 async function gameEnd(numberErrors) {
   deleteContent();
 
+  let points = countWordsOnCategory - numberErrors;
+  if (points < 0) {
+    points = 0;
+  }
+
   const gameEndWrapper = document.createElement('div');
   const gameEndImage = document.createElement('img');
   const gameEndText = document.createElement('p');
-
   gameEndWrapper.classList.add('game-end');
   gameEndImage.classList.add('game-end__img');
   gameEndText.classList.add('game-end__text');
 
   if (numberErrors) {
     gameEndImage.setAttribute('src', failureImg);
-    gameEndText.textContent = `Game over! ${numberErrors} mistakes!`;
+    gameEndText.textContent = `Game over! ${numberErrors} mistakes! Added ${points} points`;
     playSound(failureSound);
   } else {
     gameEndImage.setAttribute('src', successImg);
@@ -462,11 +466,7 @@ async function gameEnd(numberErrors) {
 
   setTimeout(locationToMainPage, timeMessageOnGameEnd);
   await sendStats();
-  let ponints = countWordsOnCategory - numberErrors;
-  if (ponints < 0) {
-    ponints = 0;
-  }
-  await addPoints(ponints);
+  await addPoints(points);
 }
 
 function calcStats(type, card) {
