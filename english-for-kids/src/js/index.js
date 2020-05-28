@@ -724,6 +724,17 @@ function generateAuthorizationForm(type) {
   modalCard.append(formImage, formWrapper);
 }
 
+function changeBacklightOnMenuFromPersonalArea(backlight) {
+  const activeUrl = document.querySelector(`.${backlight}`);
+  const allUrls = document.querySelectorAll('.personal-area__controls');
+
+  allUrls.forEach((e) => {
+    e.classList.remove('personal-area__controls_active');
+  })
+
+  activeUrl.classList.add('personal-area__controls_active');
+}
+
 function generateInformationRowAboutUser(key, value) {
   const row = document.createElement('div');
   const informationKey = document.createElement('span');
@@ -795,7 +806,8 @@ async function generatePersonalAreaWrapper(type) {
   personalAreaMenu.classList.add('personal-area__menu');
   personalImage.classList.add('personal-area__image');
   personalControlGeneral.classList.add('personal-area__controls', 'personal-area__controls_active');
-  personalControlPassword.classList.add('personal-area__controls');
+  personalControlGeneral.classList.add('personal-area__general')
+  personalControlPassword.classList.add('personal-area__controls', 'personal-area__password');
 
   personalImage.setAttribute('type', 'image/svg+xml');
   personalImage.setAttribute('data', './assets/img/personal-area.svg');
@@ -969,9 +981,10 @@ body.addEventListener('click', async (event) => {
       localStorage.clear();
       locationToMainPage();
       break;
-    case target.classList.contains('personal-area__controls'):
+    case target.classList.contains('personal-area__password'):
       deleteContent();
       generatePersonalAreaWrapper('changePassword');
+      changeBacklightOnMenuFromPersonalArea('personal-area__password');
       break;
     default:
       break;
