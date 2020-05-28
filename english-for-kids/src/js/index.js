@@ -784,7 +784,8 @@ function generatePasswordFormOfPersonalArea() {
 
   changePasswordForm.setAttribute('action', '#');
   changePasswordForm.setAttribute('method', 'POST');
-  formSubmit.setAttribute('type', 'button ');
+  formSubmit.setAttribute('type', 'button');
+  formSubmit.setAttribute('value', 'Изменить')
 
   changePasswordHeader.textContent = 'Изменение пароля';
 
