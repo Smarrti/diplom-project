@@ -744,22 +744,22 @@ function generatePasswordFormOfPersonalArea() {
   const changePasswordWrapper = document.createElement('div');
   const changePasswordHeader = document.createElement('p');
   const changePasswordForm = document.createElement('form');
+  const formSubmit = document.createElement('input');
 
   const inputOldPassword = generateLabelForm('password', 'change-password__old', 'Старый пароль');
   const inputNewPassword = generateLabelForm('password', 'change-password__new', 'Новый пароль');
   const inputRetryPassword = generateLabelForm('password', 'change-password__retry', 'Повторите пароль');
-
-  const formSubmit = document.createElement('input');
-
+  
   changePasswordWrapper.classList.add('personal-password-form');
-  formSubmit.classList.add('change-password__submit');
+  formSubmit.classList.add('change-password__submit', 'button', 'button__change-password');
 
   changePasswordForm.setAttribute('action', '#');
   changePasswordForm.setAttribute('method', 'POST');
+  formSubmit.setAttribute('type', 'submit');
 
   changePasswordHeader.textContent = 'Изменение пароля';
 
-  changePasswordForm.append(inputOldPassword, inputNewPassword, inputRetryPassword);
+  changePasswordForm.append(inputOldPassword, inputNewPassword, inputRetryPassword, formSubmit);
   changePasswordWrapper.append(changePasswordHeader, changePasswordForm);
 
   return changePasswordWrapper;
