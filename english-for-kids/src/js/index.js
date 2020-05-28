@@ -210,9 +210,9 @@ async function changePassword(oldPassword, newPassword, retryPassword) {
   const url = API.detectURL('changePassword');
 
   if (!oldPassword || !newPassword || !retryPassword) {
-    createMessage('notify', 'Ошибка данных', 'Все поля должны быть заполнены');
+    createMessage('warning', 'Ошибка данных', 'Все поля должны быть заполнены');
   } else if (newPassword !== retryPassword) {
-    createMessage('notify', 'Ошибка данных', 'Новый пароль отличается от повторяемого');
+    createMessage('warning', 'Ошибка данных', 'Новый пароль отличается от повторяемого');
   } else {
     let data = collectSimpleData();
     data.currentPassword = oldPassword;
