@@ -740,13 +740,14 @@ function generateInformationRowAboutUser(key, value) {
 }
 
 function clearPersonalAreaWrapper() {
+  const personalAreaWrapper = document.querySelector('.personal-area');
   const generalInformation = document.querySelector('.personal-information');
   const changePasswordForm = document.querySelector('.personal-password-form');
 
   if (generalInformation) {
-    mainContent.removeChild(generateInformation);
+    personalAreaWrapper.removeChild(generalInformation);
   } else {
-    mainContent.removeChild(changePasswordForm);
+    personalAreaWrapper.removeChild(changePasswordForm);
   }
 }
 
@@ -979,6 +980,10 @@ body.addEventListener('click', async (event) => {
       sessionStorage.clear();
       localStorage.clear();
       locationToMainPage();
+      break;
+    case target.classList.contains('personal-area__controls'):
+      deleteContent();
+      generatePersonalAreaWrapper('changePassword');
       break;
     default:
       break;
