@@ -740,6 +740,31 @@ async function generateGeneralPersonalArea() {
   return personalInformation;
 }
 
+function generatePasswordFormOfPersonalArea() {
+  const changePasswordWrapper = document.createElement('div');
+  const changePasswordHeader = document.createElement('p');
+  const changePasswordForm = document.createElement('form');
+
+  const inputOldPassword = generateLabelForm('password', 'change-password__old', 'Старый пароль');
+  const inputNewPassword = generateLabelForm('password', 'change-password__new', 'Новый пароль');
+  const inputRetryPassword = generateLabelForm('password', 'change-password__retry', 'Повторите пароль');
+
+  const formSubmit = document.createElement('input');
+
+  changePasswordWrapper.classList.add('personal-password-form');
+  formSubmit.classList.add('change-password__submit');
+
+  changePasswordForm.setAttribute('action', '#');
+  changePasswordForm.setAttribute('method', 'POST');
+
+  changePasswordHeader.textContent = 'Изменение пароля';
+
+  changePasswordForm.append(inputOldPassword, inputNewPassword, inputRetryPassword);
+  changePasswordWrapper.append(changePasswordHeader, changePasswordForm);
+
+  return changePasswordWrapper;
+}
+
 async function generatePersonalAreaWrapper(type) {
   const personalAreaWrapper = document.createElement('div');
   const personalAreaMenu = document.createElement('div');
@@ -766,7 +791,7 @@ async function generatePersonalAreaWrapper(type) {
   personalAreaMenu.append(personalImage, personalControls);
   personalAreaWrapper.append(personalAreaMenu);
   if (type === 'changePassword') {
-    
+    personalAreaWrapper.append(generatePasswordFormOfPersonalArea());
   } else {
     personalAreaWrapper.append(await generateGeneralPersonalArea());
   }
