@@ -462,7 +462,11 @@ async function gameEnd(numberErrors) {
 
   setTimeout(locationToMainPage, timeMessageOnGameEnd);
   await sendStats();
-  await addPoints(countWordsOnCategory - numberErrors);
+  let ponints = countWordsOnCategory - numberErrors;
+  if (ponints < 0) {
+    ponints = 0;
+  }
+  await addPoints(ponints);
 }
 
 function calcStats(type, card) {
