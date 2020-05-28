@@ -219,7 +219,7 @@ async function changePassword(oldPassword, newPassword, retryPassword) {
     data.newPassword = newPassword;
     const response = await sendRequest(url, 'POST', data);
     if (response.Success = 'Password changed') {
-      createMessage('success', 'Успешно', 'Пароль изменен');
+      createMessage('complete', 'Успешно', 'Пароль изменен');
     }
   }
 }
