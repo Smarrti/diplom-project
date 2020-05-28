@@ -986,6 +986,9 @@ body.addEventListener('click', async (event) => {
       generatePersonalAreaWrapper('changePassword');
       changeBacklightOnMenuFromPersonalArea('personal-area__password');
       break;
+    case target.classList.contains('personal-area__general'):
+      deleteContent();
+      generatePersonalAreaWrapper();
     default:
       break;
   }
