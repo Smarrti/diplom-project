@@ -19,7 +19,8 @@
         background-size: 30px, auto;
     }
     &__login,
-    &__reg {
+    &__reg,
+    &__change-password {
         width: 150px;
         font-size: 1.7rem;
         background-color: $color-primary;
