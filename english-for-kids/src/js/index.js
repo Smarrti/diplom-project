@@ -130,7 +130,7 @@ async function getStats() {
 
 async function sendStats(type) {
   const url = API.detectURL('setStats');
-  let data = collectSimpleData();
+  const data = collectSimpleData();
   data.stats = localStorage.getItem('stats');
   if (type) {
     data.stats ='{}';
@@ -195,8 +195,8 @@ async function getPoints() {
 async function addPoints(count, type) {
   const url = API.detectURL('setPoints');
   const points = await getPoints();
-  let data = collectSimpleData();
-  data.points = +points['points'] + count;
+  const data = collectSimpleData();
+  data.points = +points.points + count;
   if (type) {
     data.points = 0;
   }
@@ -217,7 +217,7 @@ async function changePassword(oldPassword, newPassword, retryPassword) {
   } else if (newPassword !== retryPassword) {
     createMessage('warning', 'Ошибка данных', 'Новый пароль отличается от повторяемого');
   } else {
-    let data = collectSimpleData();
+    const data = collectSimpleData();
     data.currentPassword = oldPassword;
     data.newPassword = newPassword;
     const response = await sendRequest(url, 'POST', data);
@@ -556,7 +556,7 @@ function changeCollectionOfDifficultWordsOnArray(obj, countWords) {
 }
 
 function collectDifficultWords(stats) {
-  let difficultWords = {};
+  const difficultWords = {};
   if (stats.choosenWrongWord) {
     Object.keys(stats.choosenWrongWord).forEach(word => {
       const countMistakes = stats.choosenWrongWord[word];
@@ -763,10 +763,10 @@ async function generateGeneralPersonalArea() {
 
   personalAreaLogout.textContent = 'Выход из системы';
 
-  personalInformation.append(generateInformationRowAboutUser('Имя:', `${dataUser['surnameUser']} ${dataUser['nameUser']}`));
-  personalInformation.append(generateInformationRowAboutUser('Дата рождения:', `${dataUser['date_birth']}`));
-  personalInformation.append(generateInformationRowAboutUser('Дата регистрации:', `${dataUser['date_registration']}`));
-  personalInformation.append(generateInformationRowAboutUser('Количество баллов:', `${dataUser['points']}`));
+  personalInformation.append(generateInformationRowAboutUser('Имя:', `${dataUser.surnameUser} ${dataUser.nameUser}`));
+  personalInformation.append(generateInformationRowAboutUser('Дата рождения:', `${dataUser.date_birth}`));
+  personalInformation.append(generateInformationRowAboutUser('Дата регистрации:', `${dataUser.date_registration}`));
+  personalInformation.append(generateInformationRowAboutUser('Количество баллов:', `${dataUser.points}`));
   personalInformation.append(personalAreaLogout);
 
   return personalInformation;
