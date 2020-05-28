@@ -739,18 +739,6 @@ function generateInformationRowAboutUser(key, value) {
   return row;
 }
 
-function clearPersonalAreaWrapper() {
-  const personalAreaWrapper = document.querySelector('.personal-area');
-  const generalInformation = document.querySelector('.personal-information');
-  const changePasswordForm = document.querySelector('.personal-password-form');
-
-  if (generalInformation) {
-    personalAreaWrapper.removeChild(generalInformation);
-  } else {
-    personalAreaWrapper.removeChild(changePasswordForm);
-  }
-}
-
 async function generateGeneralPersonalArea() {
   const dataUser = await getInformationAboutUser();
   const personalInformation = document.createElement('div');
