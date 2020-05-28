@@ -907,6 +907,11 @@ body.addEventListener('click', async (event) => {
       deleteContent();
       generatePersonalArea();
       break;
+    case target.classList.contains('personal-area__logout'):
+      sessionStorage.clear();
+      localStorage.clear();
+      locationToMainPage();
+      break;
     default:
       break;
   }
