@@ -721,31 +721,14 @@ function generateInformationRowAboutUser(key, value) {
   return row;
 }
 
-async function generatePersonalArea() {
+async function generateGeneralPersonalArea() {
   const dataUser = await getInformationAboutUser();
-  const personalAreaWrapper = document.createElement('div');
-  const personalAreaMenu = document.createElement('div');
-  const personalImage = document.createElement('object');
-  const personalControls = document.createElement('div');
-  const personalControlGeneral = document.createElement('div');
-  const personalControlPassword = document.createElement('div');
   const personalInformation = document.createElement('div');
   const personalAreaLogout = document.createElement('div');
-
-  personalAreaWrapper.classList.add('personal-area');
-  personalAreaMenu.classList.add('personal-area__menu');
-  personalImage.classList.add('personal-area__image');
-  personalControlGeneral.classList.add('personal-area__controls', 'personal-area__controls_active');
-  personalControlPassword.classList.add('personal-area__controls');
-  personalInformation.classList.add('personal-information');
+  
   personalAreaLogout.classList.add('personal-area__logout');
+  personalInformation.classList.add('personal-information');
 
-  personalImage.setAttribute('type', 'image/svg+xml');
-  personalImage.setAttribute('data', './assets/img/personal-area.svg');
-
-  personalImage.textContent = 'Your browser does not support SVG';
-  personalControlGeneral.textContent = 'General information';
-  personalControlPassword.textContent = 'Change Password';
   personalAreaLogout.textContent = 'Выход из системы';
 
   personalInformation.append(generateInformationRowAboutUser('Имя:', `${dataUser['surnameUser']} ${dataUser['nameUser']}`));
@@ -753,9 +736,40 @@ async function generatePersonalArea() {
   personalInformation.append(generateInformationRowAboutUser('Дата регистрации:', `${dataUser['date_registration']}`));
   personalInformation.append(generateInformationRowAboutUser('Количество баллов:', `${dataUser['points']}`));
   personalInformation.append(personalAreaLogout);
+
+  return personalInformation;
+}
+
+async function generatePersonalAreaWrapper(type) {
+  const personalAreaWrapper = document.createElement('div');
+  const personalAreaMenu = document.createElement('div');
+  const personalImage = document.createElement('object');
+  const personalControls = document.createElement('div');
+  const personalControlGeneral = document.createElement('div');
+  const personalControlPassword = document.createElement('div');
+
+  personalAreaWrapper.classList.add('personal-area');
+  personalAreaMenu.classList.add('personal-area__menu');
+  personalImage.classList.add('personal-area__image');
+  personalControlGeneral.classList.add('personal-area__controls', 'personal-area__controls_active');
+  personalControlPassword.classList.add('personal-area__controls');
+
+  personalImage.setAttribute('type', 'image/svg+xml');
+  personalImage.setAttribute('data', './assets/img/personal-area.svg');
+
+  personalImage.textContent = 'Your browser does not support SVG';
+  personalControlGeneral.textContent = 'General information';
+  personalControlPassword.textContent = 'Change Password';
+
+  
   personalControls.append(personalControlGeneral, personalControlPassword);
   personalAreaMenu.append(personalImage, personalControls);
-  personalAreaWrapper.append(personalAreaMenu, personalInformation);
+  personalAreaWrapper.append(personalAreaMenu);
+  if (type === 'changePassword') {
+    
+  } else {
+    personalAreaWrapper.append(await generateGeneralPersonalArea());
+  }
   mainContent.append(personalAreaWrapper);
 }
 
@@ -905,7 +919,7 @@ body.addEventListener('click', async (event) => {
       break;
     case target.classList.contains('pesonal-area-button'):
       deleteContent();
-      generatePersonalArea();
+      generatePersonalAreaWrapper();
       break;
     case target.classList.contains('personal-area__logout'):
       sessionStorage.clear();
