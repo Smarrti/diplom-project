@@ -7,6 +7,7 @@ date_default_timezone_set('UTC');
 $response;
 $code;
 $db = new PDO(createPDOConfig(), DBUSER, DBPASS);
+$db -> exec("set names utf8");
 
 function checkToken($token, $userId) {
   $sql = "SELECT `id_user`, `date_end` FROM `user_tokens` WHERE `token` = ?";
