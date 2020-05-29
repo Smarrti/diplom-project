@@ -1,11 +1,13 @@
 .control-panel {
   display: flex;
   justify-content: flex-end;
+  flex-wrap: wrap;
   &__item {
     display: flex;
     align-items: center;
     font-size: 2.0rem;
     cursor: pointer;
+    margin-top: 10px;
     &:not(:last-child) {
       margin-right: 10px;
     }
@@ -13,5 +15,10 @@
   &__image {
     width: 40px;
     margin-right: 5px;
+  }
+  & p {
+    margin-block-start: 0;
+    margin-block-end: 0;
+    
   }
 }
