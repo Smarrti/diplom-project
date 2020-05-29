@@ -1031,6 +1031,9 @@ body.addEventListener('click', async (event) => {
       await changePassword(oldPassword, newPassword, retryPassword);
       break;
     }
+    case target.classList.contains('rating-button'):
+      deleteContent();
+      generateRatingPage();
     default:
       break;
   }
