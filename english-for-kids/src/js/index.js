@@ -198,8 +198,7 @@ async function changePassword(oldPassword, newPassword, retryPassword) {
 
 async function getRating() {
   const url = API.detectURL('getRating');
-  const data = collectSimpleData();
-  const response = await sendRequest(url, 'GET', data);
+  const response = await sendRequest(url, 'GET');
   return response
 }
 
@@ -841,6 +840,24 @@ async function generatePersonalAreaWrapper(type) {
     personalAreaWrapper.append(await generateGeneralPersonalArea());
   }
   mainContent.append(personalAreaWrapper);
+}
+
+async function generateRatingPage() {
+  const data = await getRating();
+  const ratingTable = document.createElement('table');
+  const trHead = document.createElement('tr');
+
+  trHead.append(createTdElement('#'), createTdElement('Name'), createTdElement('Points'));
+  ratingTable.append(trHead);
+  data.forEach((user, index) => {
+    const userRow = document.createElement('tr');
+    const number = createTdElement(index);
+    const name = createTdElement(user.user);
+    const points = createTdElement(user.points);
+    userRow.append(number, name, points);
+    ratingTable.append(userRow);
+  });
+  mainContent.append(ratingTable);
 }
 
 deleteContent();
