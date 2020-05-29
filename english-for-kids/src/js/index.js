@@ -196,6 +196,13 @@ async function changePassword(oldPassword, newPassword, retryPassword) {
   }
 }
 
+async function getRating() {
+  const url = API.detectURL('getRating');
+  const data = collectSimpleData();
+  const response = await sendRequest(url, 'GET', data);
+  return response
+}
+
 function moveSidebar() {
   const hamburgerButton = document.querySelector('.hamburger');
   const sidebar = document.querySelector('.sidebar');

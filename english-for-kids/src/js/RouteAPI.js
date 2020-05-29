@@ -35,6 +35,9 @@ export function detectURL(requestTo) {
     case 'changePassword':
       prepareURL += 'changePassword';
       break;
+    case 'getRating':
+      prepareURL += 'getRating';
+      break;
     default:
       break;
   }
