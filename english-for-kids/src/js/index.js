@@ -847,13 +847,17 @@ async function generateRatingPage() {
   const ratingTable = document.createElement('table');
   const trHead = document.createElement('tr');
 
+  ratingTable.classList.add('table');
+  trHead.classList.add('table__header');
+
   trHead.append(createTdElement('#'), createTdElement('Name'), createTdElement('Points'));
   ratingTable.append(trHead);
   data.forEach((user, index) => {
     const userRow = document.createElement('tr');
-    const number = createTdElement(index);
+    const number = createTdElement(index + 1);
     const name = createTdElement(user.user);
     const points = createTdElement(user.points);
+    userRow.classList.add('table__row');
     userRow.append(number, name, points);
     ratingTable.append(userRow);
   });
