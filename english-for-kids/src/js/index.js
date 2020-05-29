@@ -610,6 +610,7 @@ async function createTableForStats(stats, statsContent) {
     let categoryChoosenRightWord = 0;
     let categoryChoosenWrongWord = 0;
     const categoryRow = document.createElement('tr');
+    categoryRow.classList.add('table__row')
     words.words.forEach((word) => {
       Object.keys(stats).forEach((statsElement) => {
         if (stats[statsElement][word.word]) {
@@ -655,9 +656,10 @@ async function generateStatsPage() {
   stats = JSON.parse(stats);
   
   const statsContent = document.createElement('table');
-  statsContent.classList.add('stats__content');
+  statsContent.classList.add('table');
 
   const statsTitle = document.createElement('tr');
+  statsTitle.classList.add('table__header');
   statsTitle.append(createTdElement(' '), createTdElement('Number of clicks on card'));
   statsTitle.append(createTdElement('Choosen right word'), createTdElement('Choosen wrong word'));
   statsContent.append(statsTitle);
