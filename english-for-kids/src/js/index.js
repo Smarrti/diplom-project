@@ -304,6 +304,7 @@ async function apiLoginInSystem(login, password) {
     deleteModals();
     localStorage.setItem('stats', await getStats(token.token, token.userId));
   }
+  return token;
 }
 
 async function apiRegisterInSystem(surname, name, birthday, login, password) {
@@ -592,6 +593,23 @@ function createTdElement(text) {
   const element = document.createElement('td');
   element.textContent = text;
   return element
+}
+
+function createButtonOnNavigator(name, urlImage, className) {
+  const buttonWrapper = document.createElement('div');
+  const buttonImage = document.createElement('img');
+  const buttonText = document.createElement('p');
+
+  buttonWrapper.classList.add('control-panel__item', className);
+  buttonImage.classList.add('control-panel__image', className);
+  buttonText.classList.add(className);
+
+  buttonImage.setAttribute('src', urlImage);
+
+  buttonText.textContent = name;
+
+  buttonWrapper.append(buttonImage, buttonText);
+  return buttonWrapper
 }
 
 function createPanelButtons(className, text) {
@@ -980,7 +998,12 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('button__login'): {
       const login = document.querySelector('.form__login').value;
       const password = document.querySelector('.form__password').value;
-      apiLoginInSystem(login, password);
+      const response = await apiLoginInSystem(login, password);
+      if (response.status === 'Administrator') {
+        const navigator = document.querySelector('.control-panel');
+        const button = createButtonOnNavigator('Admin', './assets/img/admin.png', 'admin-button');
+        navigator.append(button);
+      }
       break;
     }
     case target.classList.contains('button__reg'): {
