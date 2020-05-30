@@ -76,6 +76,7 @@
         break;
       case 'You don`t have access':
         createMessage('error', 'Error', 'You don`t have access');
+        break;
       default:
         break;
     }
@@ -996,16 +997,18 @@
   function generatePersonalMenu(type) {
     const menu = document.createElement('div');
     switch (type) {
-      case 'personalArea':
+      case 'personalArea': {
         const information = createPersonalAreaMenuLink('General information', 'personal-area__general', true);
         const password = createPersonalAreaMenuLink('Change password', 'personal-area__password');
         menu.append(information, password);
         break;
-      case 'admin':
+      }
+      case 'admin': {
         const addWords = createPersonalAreaMenuLink('Content', 'personal-area__content', true);
         const users = createPersonalAreaMenuLink('Users', 'personal-area__users');
         menu.append(addWords, users);
         break;
+      }
       default:
         break;
     }
@@ -1265,12 +1268,13 @@
         deleteContent();
         generatePersonalAreaWrapper('admin');
         break;
-      case target.classList.contains('form-category__submit'):
+      case target.classList.contains('form-category__submit'): {
         const name = document.querySelector('.form-category__name').value;
         const image = document.querySelector('.form-category__image').value;
         await addCategory(name, image);
         break;
-      case target.classList.contains('form-word__submit'):
+      }
+      case target.classList.contains('form-word__submit'): {
         const word = document.querySelector('.form-word__name').value;
         const translate = document.querySelector('.form-word__translate').value;
         const urlImage = document.querySelector('.form-word__image').value;
@@ -1278,6 +1282,7 @@
         const categoryId = document.querySelector('.form-word__categoryId').value;
         await addWord(word, translate, urlImage, urlAudio, categoryId)
         break;
+      }
       case target.classList.contains('personal-area__users'):
         deleteContent();
         await generatePersonalAreaWrapper('getAllUsers');
