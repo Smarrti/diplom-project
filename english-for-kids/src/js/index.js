@@ -828,6 +828,48 @@ function generatePasswordFormOfPersonalArea() {
   return changePasswordWrapper;
 }
 
+function generateAdminPanel(type) {
+  const panel = document.createElement('div');
+  const panelHeader = document.createElement('p');
+  switch (type) {
+    case 'addImages':
+      
+      break;
+    default:
+      break;
+  }
+  panel.append(panelHeader);
+}
+
+function createPersonalAreaMenuLink(name, className, isActive) {
+  const menuLink = document.createElement('div');
+  menuLink.classList.add('personal-area__controls', className)
+  if (isActive) {
+    menuLink.classList.add('personal-area__controls_active');
+  }
+  menuLink.textContent = name;
+  return menuLink;
+}
+
+function generatePersonalMenu(type) {
+  const menu = document.createElement('div');
+  switch (type) {
+    case 'personalArea':
+      const information = createPersonalAreaMenuLink('General information', 'personal-area__general', true);
+      const password = createPersonalAreaMenuLink('Change password', 'personal-area__password');
+      menu.append(information, password);
+      break;
+    case 'admin':
+      const addWords = createPersonalAreaMenuLink('Content', 'personal-area__content', true);
+      const users = createPersonalAreaMenuLink('Users', 'personal-area__users');
+      menu.append(addWords, users);
+      break;
+    default:
+      break;
+  }
+  return menu;
+}
+
 async function generatePersonalAreaWrapper(type) {
   const personalAreaWrapper = document.createElement('div');
   const personalAreaMenu = document.createElement('div');
@@ -850,14 +892,22 @@ async function generatePersonalAreaWrapper(type) {
   personalControlGeneral.textContent = 'General information';
   personalControlPassword.textContent = 'Change Password';
 
-  
-  personalControls.append(personalControlGeneral, personalControlPassword);
   personalAreaMenu.append(personalImage, personalControls);
   personalAreaWrapper.append(personalAreaMenu);
-  if (type === 'changePassword') {
-    personalAreaWrapper.append(generatePasswordFormOfPersonalArea());
-  } else {
-    personalAreaWrapper.append(await generateGeneralPersonalArea());
+  switch (type) {
+    case 'generalInformation':
+      personalControls.append(generatePersonalMenu('personalArea'));
+      personalAreaWrapper.append(await generateGeneralPersonalArea());
+      break;
+    case 'changePassword':
+      personalControls.append(generatePersonalMenu('personalArea'));
+      personalAreaWrapper.append(generatePasswordFormOfPersonalArea());
+      break;
+    case 'admin':
+      personalControls.append(generatePersonalMenu('admin'));
+      personalAreaWrapper.append(generateAdminPanel('addImages'));
+    default:
+      break;
   }
   mainContent.append(personalAreaWrapper);
 }
@@ -1037,7 +1087,7 @@ body.addEventListener('click', async (event) => {
     }
     case target.classList.contains('pesonal-area-button'):
       deleteContent();
-      generatePersonalAreaWrapper();
+      generatePersonalAreaWrapper('generalInformation');
       break;
     case target.classList.contains('personal-area__logout'):
       sessionStorage.clear();
@@ -1051,7 +1101,7 @@ body.addEventListener('click', async (event) => {
       break;
     case target.classList.contains('personal-area__general'):
       deleteContent();
-      generatePersonalAreaWrapper();
+      generatePersonalAreaWrapper('generalInformation');
       break;
     case target.classList.contains('change-password__submit'): {
       const oldPassword = document.querySelector('.change-password__old').value;
@@ -1063,6 +1113,11 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('rating-button'):
       deleteContent();
       generateRatingPage();
+      break;
+    case target.classList.contains('admin-button'):
+      deleteContent();
+      generatePersonalAreaWrapper('admin');
+      break;
     default:
       break;
   }
