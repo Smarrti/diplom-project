@@ -902,8 +902,8 @@
 
     categories.forEach((category) => {
       const item = document.createElement('option');
-      item.setAttribute('value', category["id_category"]);
-      item.textContent = category["name_category"];
+      item.setAttribute('value', category.id_category);
+      item.textContent = category.name_category;
       categoryList.append(item);
     })
 
@@ -951,13 +951,13 @@
     users.forEach((user) => {
       const row = document.createElement('tr');
       row.classList.add('table__row');
-      const id = createTdElement(user['id_user']);
-      const name = createTdElement(user['user']);
-      const dateBirth = createTdElement(user['date_birth']);
-      const dateReg = createTdElement(user['date_registration']);
-      const login = createTdElement(user['login']);
-      const status = createTdElement(user['status']);
-      const points = createTdElement(user['points']);
+      const id = createTdElement(user.id_user);
+      const name = createTdElement(user.user);
+      const dateBirth = createTdElement(user.date_birth);
+      const dateReg = createTdElement(user.date_registration);
+      const login = createTdElement(user.login);
+      const status = createTdElement(user.status);
+      const points = createTdElement(user.points);
       row.append(id, name, dateBirth, dateReg, login, status, points);
       table.append(row);
     });
