@@ -828,17 +828,63 @@ function generatePasswordFormOfPersonalArea() {
   return changePasswordWrapper;
 }
 
-function generateAdminPanel(type) {
+async function generateAdminPanel(type) {
   const panel = document.createElement('div');
-  const panelHeader = document.createElement('p');
+  const panelContent = document.createElement('div');
   switch (type) {
-    case 'addImages':
-      
+    case 'addContent':
+      const formCategory = document.createElement('form');
+      const formCategoryHeader = document.createElement('p');
+      const categoryNameInput = generateLabelForm('text', 'form-category__name', 'Category name');
+      const categoryImageInput = generateLabelForm('text', 'form-category__image', 'URL image');
+      const formCategorySubmit = document.createElement('input');
+
+      formCategorySubmit.classList.add('form-category__submit', 'button');
+
+      formCategory.setAttribute('action', '#');
+      formCategory.setAttribute('method', 'POST');
+      formCategorySubmit.setAttribute('type', 'button');
+      formCategorySubmit.setAttribute('value', 'Добавить');
+
+      formCategoryHeader.textContent = 'Add category';
+
+      formCategory.append(formCategoryHeader, categoryNameInput, categoryImageInput, formCategorySubmit);
+
+      const formWord = document.createElement('form');
+      const formWordHeader = document.createElement('p');
+      const wordNameInput = generateLabelForm('text', 'form-word__name', 'Word');
+      const wordTranslate = generateLabelForm('text', 'form-word__translate', 'Translate');
+      const wordImageInput = generateLabelForm('text', 'form-word__image', 'URL image');
+      const wordAudioInput = generateLabelForm('text', 'form-word__audio', 'URL audio');
+      const categoryList = document.createElement('select');
+      const categories = await getCategories();
+      const formWordSubmit = document.createElement('input');
+
+      formWordSubmit.classList.add('form-word__submit', 'button');
+
+      formWord.setAttribute('action', '#');
+      formWord.setAttribute('method', 'POST');
+      formWordSubmit.setAttribute('type', 'button');
+      formWordSubmit.setAttribute('value', 'Добавить');
+
+      formWordHeader.textContent = 'Add word';
+
+      categories.forEach((category) => {
+        const item = document.createElement('option');
+        item.setAttribute('value', category["name_category"]);
+        item.textContent = category["name_category"];
+        categoryList.append(item);
+      })
+
+      formWord.append(formWordHeader, wordNameInput, wordTranslate, wordImageInput, wordAudioInput, categoryList, formWordSubmit);
+
+      panelContent.append(formCategory, formWord);
       break;
     default:
       break;
   }
-  panel.append(panelHeader);
+  panel.append(panelContent);
+  return panel;
 }
 
 function createPersonalAreaMenuLink(name, className, isActive) {
@@ -905,7 +951,7 @@ async function generatePersonalAreaWrapper(type) {
       break;
     case 'admin':
       personalControls.append(generatePersonalMenu('admin'));
-      personalAreaWrapper.append(generateAdminPanel('addImages'));
+      personalAreaWrapper.append(await generateAdminPanel('addContent'));
     default:
       break;
   }
