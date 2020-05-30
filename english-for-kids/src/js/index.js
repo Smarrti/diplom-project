@@ -359,6 +359,13 @@ async function addWord(word, translate, urlImg, urlAudio, categoryId) {
   }
 }
 
+async function getAllUsers() {
+  const url = API.detectURL('getUsers');
+  const data = collectSimpleData();
+  const response = await sendRequest(url, 'POST', data);
+  return response;
+}
+
 function collectDifficultWords(stats) {
   const difficultWords = {};
   if (stats.choosenWrongWord) {

@@ -44,6 +44,9 @@ export function detectURL(requestTo) {
     case 'addWord':
       prepareURL += 'createWord';
       break;
+    case 'getUsers':
+      prepareURL += 'getAllUsers';
+      break;
     default:
       break;
   }
