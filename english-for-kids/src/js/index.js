@@ -935,6 +935,19 @@
     const table = document.createElement('table');
     const users = await getAllUsers();
     table.classList.add('table', 'table_users');
+
+    const rowHead = document.createElement('tr');
+    rowHead.classList.add('table__header');
+    const idHead = createTdElement('#');
+    const nameHead = createTdElement('Name');
+    const dateBirthHead = createTdElement('Date of birthday');
+    const dateRegHead = createTdElement('Date of registration');
+    const loginHead = createTdElement('Login');
+    const statusHead = createTdElement('Status');
+    const pointsHead = createTdElement('Points');
+    rowHead.append(idHead, nameHead, dateBirthHead, dateRegHead, loginHead, statusHead, pointsHead);
+    table.append(rowHead);
+
     users.forEach((user) => {
       const row = document.createElement('tr');
       row.classList.add('table__row');
