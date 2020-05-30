@@ -74,6 +74,8 @@ function resolveApiErrors(type) {
     case 'Current password is wrong':
       createMessage('warning', 'Ошибка', 'Не верный пароль');
       break;
+    case 'You don`t have access':
+      createMessage('error', 'Error', 'You don`t have access');
     default:
       break;
   }
