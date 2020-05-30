@@ -887,7 +887,7 @@ async function generateAdminPanel(type) {
       const formWordSubmit = document.createElement('input');
 
       formWordSubmit.classList.add('form-word__submit', 'button', 'button__admin');
-      categoryList.classList.add('form__input');
+      categoryList.classList.add('form__input', 'form-word__categoryId');
 
       formWord.setAttribute('action', '#');
       formWord.setAttribute('method', 'POST');
@@ -1195,6 +1195,14 @@ body.addEventListener('click', async (event) => {
       const name = document.querySelector('.form-category__name').value;
       const image = document.querySelector('.form-category__image').value;
       await addCategory(name, image);
+      break;
+    case target.classList.contains('form-word__submit'):
+      const word = document.querySelector('.form-word__name').value;
+      const translate = document.querySelector('.form-word__translate').value;
+      const urlImage = document.querySelector('.form-word__image').value;
+      const urlAudio = document.querySelector('.form-word__audio').value;
+      const categoryId = document.querySelector('.form-word__categoryId').value;
+      await addWord(word, translate, urlImage, urlAudio, categoryId)
       break;
     default:
       break;
