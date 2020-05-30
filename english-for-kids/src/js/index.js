@@ -1270,6 +1270,11 @@
         await generatePersonalAreaWrapper('getAllUsers');
         changeBacklightOnMenuFromPersonalArea('personal-area__users');
         break;
+      case target.classList.contains('personal-area__content'):
+        deleteContent();
+        await generatePersonalAreaWrapper('admin');
+        changeBacklightOnMenuFromPersonalArea('personal-area__content');
+        break;
       default:
         break;
     }
