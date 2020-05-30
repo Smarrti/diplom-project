@@ -332,6 +332,17 @@ async function determineCategoryId(categoryName) {
   return response.categoryId;
 }
 
+async function addCategory(name, photo) {
+  const url = API.detectURL('addCategory');
+  const data = collectSimpleData();
+  data.category = name;
+  data.photo = photo;
+  const response = await sendRequest(url, 'POST', data);
+  if (response.Success) {
+    createMessage('complete', 'Success', 'Category added');
+  }
+}
+
 function collectDifficultWords(stats) {
   const difficultWords = {};
   if (stats.choosenWrongWord) {
@@ -838,7 +849,6 @@ async function generateAdminPanel(type) {
       const categoryNameInput = generateLabelForm('text', 'form-category__name', 'Category name');
       const categoryImageInput = generateLabelForm('text', 'form-category__image', 'URL image');
       const formCategorySubmit = document.createElement('input');
-
       formCategorySubmit.classList.add('form-category__submit', 'button', 'button__admin');
 
       formCategory.setAttribute('action', '#');
@@ -992,7 +1002,7 @@ if (sessionToken) {
 
 body.addEventListener('click', async (event) => {
   const { target, path, } = event;
-  if ((target.classList.contains('button__reg') && document.querySelector('.form').checkValidity()) && !target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
+  if (!target.classList.contains('form__head') && !target.classList.contains('switch') && !target.classList.contains('switch-input')) {
     event.preventDefault();
   }
   const textEvent = target.textContent;
@@ -1164,6 +1174,11 @@ body.addEventListener('click', async (event) => {
     case target.classList.contains('admin-button'):
       deleteContent();
       generatePersonalAreaWrapper('admin');
+      break;
+    case target.classList.contains('form-category__submit'):
+      const name = document.querySelector('.form-category__name').value;
+      const image = document.querySelector('.form-category__image').value;
+      await addCategory(name, image);
       break;
     default:
       break;

@@ -38,6 +38,8 @@ export function detectURL(requestTo) {
     case 'getRating':
       prepareURL += 'getRating';
       break;
+    case 'addCategory':
+      prepareURL += 'createNewCategory';
     default:
       break;
   }
