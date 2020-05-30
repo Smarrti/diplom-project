@@ -40,6 +40,10 @@ export function detectURL(requestTo) {
       break;
     case 'addCategory':
       prepareURL += 'createNewCategory';
+      break;
+    case 'addWord':
+      prepareURL += 'createWord';
+      break;
     default:
       break;
   }

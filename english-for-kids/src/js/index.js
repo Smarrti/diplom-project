@@ -345,6 +345,20 @@ async function addCategory(name, photo) {
   }
 }
 
+async function addWord(word, translate, urlImg, urlAudio, categoryId) {
+  const url = API.detectURL('addWord');
+  const data = collectSimpleData();
+  data.word = word;
+  data.translation = translate;
+  data.image = urlImg;
+  data.audio = urlAudio;
+  data.categoryId = categoryId;
+  const response = await sendRequest(url, 'POST', data);
+  if (response.Success) {
+    createMessage('complete', 'Success', 'Word added');
+  }
+}
+
 function collectDifficultWords(stats) {
   const difficultWords = {};
   if (stats.choosenWrongWord) {
@@ -884,7 +898,7 @@ async function generateAdminPanel(type) {
 
       categories.forEach((category) => {
         const item = document.createElement('option');
-        item.setAttribute('value', category["name_category"]);
+        item.setAttribute('value', category["id_category"]);
         item.textContent = category["name_category"];
         categoryList.append(item);
       })
