@@ -913,7 +913,7 @@ async function generateFormForAddContent() {
   return panelContent;
 }
 
-function generateTableOfUsers() {
+async function generateTableOfUsers() {
   const panelContent = document.createElement('div');
   const formAddAdmin = document.createElement('form');
   const formHeader = document.createElement('p');
@@ -931,7 +931,25 @@ function generateTableOfUsers() {
   formHeader.textContent = 'Add user as administrator';
 
   formAddAdmin.append(formHeader, formInput, formSubmit);
-  panelContent.append(formAddAdmin);
+
+  const table = document.createElement('table');
+  const users = await getAllUsers();
+  table.classList.add('table', 'table_users');
+  users.forEach((user) => {
+    const row = document.createElement('tr');
+    row.classList.add('table__row');
+    const id = createTdElement(user['id_user']);
+    const name = createTdElement(user['user']);
+    const dateBirth = createTdElement(user['date_birth']);
+    const dateReg = createTdElement(user['date_registration']);
+    const login = createTdElement(user['login']);
+    const status = createTdElement(user['status']);
+    const points = createTdElement(user['points']);
+    row.append(id, name, dateBirth, dateReg, login, status, points);
+    table.append(row);
+  });
+
+  panelContent.append(formAddAdmin, table);
   return panelContent;
 }
 
