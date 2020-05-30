@@ -855,57 +855,88 @@ function generatePasswordFormOfPersonalArea() {
   return changePasswordWrapper;
 }
 
+async function generateFormForAddContent() {
+  const panelContent = document.createElement('div');
+  const formCategory = document.createElement('form');
+  const formCategoryHeader = document.createElement('p');
+  const categoryNameInput = generateLabelForm('text', 'form-category__name', 'Category name');
+  const categoryImageInput = generateLabelForm('text', 'form-category__image', 'URL image');
+  const formCategorySubmit = document.createElement('input');
+  formCategorySubmit.classList.add('form-category__submit', 'button', 'button__admin');
+
+  formCategory.setAttribute('action', '#');
+  formCategory.setAttribute('method', 'POST');
+  formCategorySubmit.setAttribute('type', 'button');
+  formCategorySubmit.setAttribute('value', 'Добавить');
+
+  formCategoryHeader.textContent = 'Add category';
+
+  formCategory.append(formCategoryHeader, categoryNameInput, categoryImageInput, formCategorySubmit);
+
+  const formWord = document.createElement('form');
+  const formWordHeader = document.createElement('p');
+  const wordNameInput = generateLabelForm('text', 'form-word__name', 'Word');
+  const wordTranslate = generateLabelForm('text', 'form-word__translate', 'Translate');
+  const wordImageInput = generateLabelForm('text', 'form-word__image', 'URL image');
+  const wordAudioInput = generateLabelForm('text', 'form-word__audio', 'URL audio');
+  const categoryList = document.createElement('select');
+  const categories = await getCategories();
+  const formWordSubmit = document.createElement('input');
+
+  formWordSubmit.classList.add('form-word__submit', 'button', 'button__admin');
+  categoryList.classList.add('form__input', 'form-word__categoryId');
+
+  formWord.setAttribute('action', '#');
+  formWord.setAttribute('method', 'POST');
+  formWordSubmit.setAttribute('type', 'button');
+  formWordSubmit.setAttribute('value', 'Добавить');
+
+  formWordHeader.textContent = 'Add word';
+
+  categories.forEach((category) => {
+    const item = document.createElement('option');
+    item.setAttribute('value', category["id_category"]);
+    item.textContent = category["name_category"];
+    categoryList.append(item);
+  })
+
+  formWord.append(formWordHeader, wordNameInput, wordTranslate, wordImageInput, wordAudioInput, categoryList, formWordSubmit);
+
+  panelContent.append(formCategory, formWord);
+  return panelContent;
+}
+
+function generateTableOfUsers() {
+  const panelContent = document.createElement('div');
+  const formAddAdmin = document.createElement('form');
+  const formHeader = document.createElement('p');
+  const formInput = generateLabelForm('text', 'form-admin__input', 'User ID');
+  const formSubmit = document.createElement('input');
+
+  formAddAdmin.classList.add('form');
+  formSubmit.classList.add('form-admin__submit', 'button', 'button__admin');
+
+  formAddAdmin.setAttribute('method', 'POST');
+  formAddAdmin.setAttribute('action', '#');
+  formSubmit.setAttribute('type', 'button');
+  formSubmit.setAttribute('value', 'Appoint');
+
+  formHeader.textContent = 'Add user as administrator';
+
+  formAddAdmin.append(formHeader, formInput, formSubmit);
+  panelContent.append(formAddAdmin);
+  return panelContent;
+}
+
 async function generateAdminPanel(type) {
   const panel = document.createElement('div');
-  const panelContent = document.createElement('div');
+  let panelContent;
   switch (type) {
     case 'addContent':
-      const formCategory = document.createElement('form');
-      const formCategoryHeader = document.createElement('p');
-      const categoryNameInput = generateLabelForm('text', 'form-category__name', 'Category name');
-      const categoryImageInput = generateLabelForm('text', 'form-category__image', 'URL image');
-      const formCategorySubmit = document.createElement('input');
-      formCategorySubmit.classList.add('form-category__submit', 'button', 'button__admin');
-
-      formCategory.setAttribute('action', '#');
-      formCategory.setAttribute('method', 'POST');
-      formCategorySubmit.setAttribute('type', 'button');
-      formCategorySubmit.setAttribute('value', 'Добавить');
-
-      formCategoryHeader.textContent = 'Add category';
-
-      formCategory.append(formCategoryHeader, categoryNameInput, categoryImageInput, formCategorySubmit);
-
-      const formWord = document.createElement('form');
-      const formWordHeader = document.createElement('p');
-      const wordNameInput = generateLabelForm('text', 'form-word__name', 'Word');
-      const wordTranslate = generateLabelForm('text', 'form-word__translate', 'Translate');
-      const wordImageInput = generateLabelForm('text', 'form-word__image', 'URL image');
-      const wordAudioInput = generateLabelForm('text', 'form-word__audio', 'URL audio');
-      const categoryList = document.createElement('select');
-      const categories = await getCategories();
-      const formWordSubmit = document.createElement('input');
-
-      formWordSubmit.classList.add('form-word__submit', 'button', 'button__admin');
-      categoryList.classList.add('form__input', 'form-word__categoryId');
-
-      formWord.setAttribute('action', '#');
-      formWord.setAttribute('method', 'POST');
-      formWordSubmit.setAttribute('type', 'button');
-      formWordSubmit.setAttribute('value', 'Добавить');
-
-      formWordHeader.textContent = 'Add word';
-
-      categories.forEach((category) => {
-        const item = document.createElement('option');
-        item.setAttribute('value', category["id_category"]);
-        item.textContent = category["name_category"];
-        categoryList.append(item);
-      })
-
-      formWord.append(formWordHeader, wordNameInput, wordTranslate, wordImageInput, wordAudioInput, categoryList, formWordSubmit);
-
-      panelContent.append(formCategory, formWord);
+      panelContent = await generateFormForAddContent();
+      break;
+    case 'getUsers':
+      panelContent = await generateTableOfUsers();
       break;
     default:
       break;
