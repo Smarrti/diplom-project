@@ -839,7 +839,7 @@ async function generateAdminPanel(type) {
       const categoryImageInput = generateLabelForm('text', 'form-category__image', 'URL image');
       const formCategorySubmit = document.createElement('input');
 
-      formCategorySubmit.classList.add('form-category__submit', 'button');
+      formCategorySubmit.classList.add('form-category__submit', 'button', 'button__admin');
 
       formCategory.setAttribute('action', '#');
       formCategory.setAttribute('method', 'POST');
@@ -860,7 +860,8 @@ async function generateAdminPanel(type) {
       const categories = await getCategories();
       const formWordSubmit = document.createElement('input');
 
-      formWordSubmit.classList.add('form-word__submit', 'button');
+      formWordSubmit.classList.add('form-word__submit', 'button', 'button__admin');
+      categoryList.classList.add('form__input');
 
       formWord.setAttribute('action', '#');
       formWord.setAttribute('method', 'POST');
