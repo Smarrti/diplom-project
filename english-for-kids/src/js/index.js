@@ -1096,6 +1096,11 @@
   if (sessionToken) {
     generateStartContent();
     generateSidebar();
+    if (sessionStorage.getItem('status') === 'Administrator') {
+      const navigator = document.querySelector('.control-panel');
+      const button = createButtonOnNavigator('Admin', './assets/img/admin.png', 'admin-button');
+      navigator.append(button);
+    }
   } else {
     generateAuthorizationForm('login');
   }
