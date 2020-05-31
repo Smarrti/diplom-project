@@ -1,6 +1,5 @@
 .personal-area {
   display: flex;
-  flex-wrap: wrap;
   width: 700px;
   margin: 20px auto;
   font-size: 2rem;
@@ -21,6 +20,8 @@
     cursor: pointer;
   }
   @include media-mobile {
+    flex-wrap: wrap;
+    justify-content: center;
     width: 100%;
     font-size: 1.7rem;
   }
