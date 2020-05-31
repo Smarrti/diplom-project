@@ -1,5 +1,6 @@
 .personal-area {
   display: flex;
+  flex-wrap: wrap;
   width: 700px;
   margin: 20px auto;
   font-size: 2rem;
@@ -18,6 +19,10 @@
   &__logout {
     color: $color-retry-first;
     cursor: pointer;
+  }
+  @include media-mobile {
+    width: 100%;
+    font-size: 1.7rem;
   }
 }
 
