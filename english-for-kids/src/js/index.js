@@ -1311,9 +1311,11 @@
         await generatePersonalAreaWrapper('admin');
         changeBacklightOnMenuFromPersonalArea('personal-area__content');
         break;
-      case target.classList.contains('form-admin__submit'):
+      case target.classList.contains('form-admin__submit'): {
         const idForSetAdmin = document.querySelector('.form-admin__input').value;
         await setNewAdmin(idForSetAdmin);
+        break;
+      }
       default:
         break;
     }
