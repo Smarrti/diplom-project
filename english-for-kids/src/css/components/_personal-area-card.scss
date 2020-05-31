@@ -1,6 +1,6 @@
 .personal-area {
   display: flex;
-  width: 700px;
+  min-width: 700px;
   margin: 20px auto;
   font-size: 2rem;
   border-radius: 5px;
@@ -23,6 +23,7 @@
     flex-wrap: wrap;
     justify-content: center;
     width: 100%;
+    min-width: auto;
     font-size: 1.7rem;
   }
 }
