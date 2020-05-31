@@ -1132,12 +1132,15 @@
       }
       case target.classList.contains('sidebar__link'):
         deleteContent();
-        if (textEvent === 'Main Page') {
-          generateStartContent();
-        } else if (textEvent === 'Stats') {
-          generateStatsPage();
-        } else  {
-          generateTrainMode(categories.indexOf(textEvent) + 1, switcher.checked);
+        switch (textEvent) {
+          case 'Main Page':
+            generateStartContent();
+            break;
+          case 'Stats':
+            await generateStatsPage();
+            break;
+          default:
+            break;
         }
         changeSidebarLinkActive(textEvent);
         break;
