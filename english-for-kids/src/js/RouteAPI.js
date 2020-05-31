@@ -47,6 +47,9 @@ export function detectURL(requestTo) {
     case 'getUsers':
       prepareURL += 'getAllUsers';
       break;
+    case 'setNewAdmin':
+      prepareURL += 'setAdministrator';
+      break;
     default:
       break;
   }

@@ -364,6 +364,16 @@
     return response;
   }
 
+  async function setNewAdmin(idForSetAdmin) {
+    const url = API.detectURL('setNewAdmin');
+    const data = collectSimpleData();
+    data.idForSetAdmin = idForSetAdmin;
+    const response = sendRequest(url, 'POST', data);
+    if (response.Success) {
+      createMessage('complete', 'Success', 'Administrator added');
+    }
+  }
+
   function collectDifficultWords(stats) {
     const difficultWords = {};
     if (stats.choosenWrongWord) {
