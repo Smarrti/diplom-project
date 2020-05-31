@@ -1,0 +1,23 @@
+.table {
+  width: 900px;
+  font-size: 1.8rem;
+  border-collapse: collapse;
+  margin: 10px 5px;
+  &__header {
+    background-color: $color-primary;
+  }
+  &__row {
+    border-bottom: 1px solid $color-darkness;
+    &:hover {
+      background-color: $color-additional;
+    }
+    & td {
+      padding: 0 5px;
+    }
+  }
+  &_users {
+    max-width: 100%;
+    width: auto;
+    font-size: 1.6rem;
+  }
+}
