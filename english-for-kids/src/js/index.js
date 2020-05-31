@@ -280,14 +280,11 @@
     });
   }
 
-  async function generateSidebar() {
-    const categories = await getCategories();
+  function generateSidebar() {
     const sidebar = document.querySelector('.sidebar');
     sidebar.append(createSidebarElement('a', '#', 'sidebar__link sidebar__link_active', 'Main Page'));
     sidebar.append(createSidebarElement('a', '#', 'sidebar__link', 'Stats'));
-    categories.forEach((category) => {
-      sidebar.append(createSidebarElement('a', '#', 'sidebar__link', category.name_category));
-    });
+    sidebar.append(createSidebarElement('a', '#', 'sidebar__link', 'Personal Area'));
   }
 
   async function apiLoginInSystem(login, password) {
@@ -1138,6 +1135,9 @@
             break;
           case 'Stats':
             await generateStatsPage();
+            break;
+          case 'Personal Area':
+            generatePersonalAreaWrapper('generalInformation');
             break;
           default:
             break;
