@@ -368,7 +368,7 @@
     const url = API.detectURL('setNewAdmin');
     const data = collectSimpleData();
     data.idForSetAdmin = idForSetAdmin;
-    const response = sendRequest(url, 'POST', data);
+    const response = await sendRequest(url, 'POST', data);
     if (response.Success) {
       createMessage('complete', 'Success', 'Administrator added');
     }
@@ -1306,6 +1306,9 @@
         await generatePersonalAreaWrapper('admin');
         changeBacklightOnMenuFromPersonalArea('personal-area__content');
         break;
+      case target.classList.contains('form-admin__submit'):
+        const idForSetAdmin = document.querySelector('.form-admin__input').value;
+        await setNewAdmin(idForSetAdmin);
       default:
         break;
     }
